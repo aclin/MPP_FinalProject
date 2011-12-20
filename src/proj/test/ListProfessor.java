@@ -21,9 +21,11 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,23 +44,6 @@ public class ListProfessor extends Activity implements ServerCall {
 	private int queryLength;
 	
 	ListView list;
-	/*private static final int[] arrImage = new int[] { R.drawable.pic1,
-			R.drawable.pic2, R.drawable.pic3, R.drawable.pic4, R.drawable.pic5,
-			R.drawable.pic6, R.drawable.pic7, R.drawable.pic8, R.drawable.pic9,
-			R.drawable.pic10, R.drawable.pic11, R.drawable.pic12,
-			R.drawable.pic13 };
-
-	private static final String[] arrName = new String[] { "���ۥ�", "��R�g", "�x�@��",
-			"��ïu", "���Y�p", "�����J", "��ø�", "�f�Ǥ@", "�ťߦ�", "�L����", "���E��", "�L�a��",
-			"���Y�s" };
-	private static final String[] arrDepart = new String[] { "��T�t", "��T�t",
-			"��T�t", "��T�t", "��T�t", "��T�t", "��T�t", "��T�t", "��T�t", "��T�t", "��T�t",
-			"��T�t", "��T�t" };
-	private static final String[] arrFor = new String[] { "13", "12", "11",
-			"10", "9", "8", "7", "6", "5", "4", "3", "2", "1" };
-	private static final String[] arrAgainst = new String[] { "1", "2", "3",
-			"4", "5", "6", "7", "8", "9", "10", "11", "12", "13" };
-	*/
 	
 	private String[] arrImage;
 	private String[] arrName;
@@ -78,101 +63,99 @@ public class ListProfessor extends Activity implements ServerCall {
 		
 		if (depts.compareTo("cs") == 0) {
 			list = (ListView) findViewById(R.id.listView_professor);
-			try {
-				postData(ServerCall.POST_READ, listURL);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
 			
-			// �ͦ��ʺA�}�C�A�[�J���
-			final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
-			// �ͦ�Adapter��Item�M�ʺA�}�C����������
-			final SimpleAdapter listItemAdapter = new SimpleAdapter(this,
-					listItem, R.layout.listview_professor, new String[] {
-							"ItemImage", "ItemName", "ItemDepart", "ItemFor",
-							"ItemAgainst" }, new int[] {
-							R.id.imageView_ItemImage, R.id.textView_ItemName,
-							R.id.textView_ItemDepart, R.id.textView_ItemFor,
-							R.id.textView_ItemAgainst });
-			
-			for (int i = 0; i < queryLength; i++) {
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("ItemImage", getBitmap(i));
-				map.put("ItemName", arrName[i]);
-				map.put("ItemDepart", arrDepart[i]);
-				map.put("ItemFor", arrFor[i]);
-				map.put("ItemAgainst", arrAgainst[i]);
-				listItem.add(map);
-			}
-			
-			listItemAdapter.setViewBinder(new ViewBinder() {    
-                
-	            public boolean setViewValue(View view, Object data,    
-	                    String textRepresentation) {    
-	                if (view instanceof ImageView  && data instanceof Bitmap) {    
-	                    ImageView iv = (ImageView) view;
-	                    iv.setImageBitmap((Bitmap) data);    
-	                    return true;    
-	                } else {
-	                	return false;
-	                }
-	            }    
-	        });
-			list.setAdapter(listItemAdapter);
-			//listItemAdapter.notifyDataSetChanged();
-
-			list.setOnItemClickListener(new OnItemClickListener() {
-				//String bImage = "";
-				String bName = "";
-				String bDepart = "";
-				String bFor = "";
-				String bAgainst = "";
-				Bitmap bImage;
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int position, final long id) {
-					// TODO Auto-generated method stub
-					final int peopleToBeShown = position;
-					// Toast.makeText(ListProfessor.this, "No. " +
-					// peopleToBeShown,
-					// Toast.LENGTH_SHORT).show();
-					HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
-							.getItemAtPosition(peopleToBeShown);
-					//bImage = itemAtPosition.get("ItemImage").toString();
-					// Toast.makeText(ListProfessor.this, "No. " + bImage,
-					// Toast.LENGTH_SHORT).show();
-					bName = itemAtPosition.get("ItemName").toString();
-					setTitle("���F" + bName);
-					bDepart = itemAtPosition.get("ItemDepart").toString();
-					bFor = itemAtPosition.get("ItemFor").toString();
-					bAgainst = itemAtPosition.get("ItemAgainst").toString();
-					bImage = (Bitmap) itemAtPosition.get("ItemImage");
-					Intent newAct = new Intent();
-					newAct.setClass(ListProfessor.this, Induvidual.class);
-					// �إ� Bundle ����
-					Bundle bData = new Bundle();
-
-					// �g�J��ƨ� Bundle ��
-					//bData.putString("bImage", bImage);
-					bData.putString("bName", bName);
-					bData.putString("bDepart", bDepart);
-					bData.putString("bFor", bFor);
-					bData.putString("bAgainst", bAgainst);
-					bData.putString("dept", "cs");
-					newAct.putExtras(bData);
-					newAct.putExtra("bImage", bImage);
-					startActivity(newAct); // Need to change this to startActivityForResult()
-				}
-			});
-
+			new NetworkTask().execute(ServerCall.POST_READ);
 		}
+	}
+	
+	private void populateList() {
+		// 嚙談佗蕭嚙褊態嚙罷嚙瘠嚙璀嚙稼嚙皚嚙踝蕭嚙�
+		final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+		// 嚙談佗蕭Adapter嚙踝蕭Item嚙瞎嚙褊態嚙罷嚙瘠嚙踝蕭嚙踝蕭嚙踝蕭嚙踝蕭嚙踝蕭
+		final SimpleAdapter listItemAdapter = new SimpleAdapter(this,
+				listItem, R.layout.listview_professor, new String[] {
+						"ItemImage", "ItemName", "ItemDepart", "ItemFor",
+						"ItemAgainst" }, new int[] {
+						R.id.imageView_ItemImage, R.id.textView_ItemName,
+						R.id.textView_ItemDepart, R.id.textView_ItemFor,
+						R.id.textView_ItemAgainst });
+		
+		for (int i = 0; i < queryLength; i++) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("ItemImage", getBitmap(i));
+			map.put("ItemName", arrName[i]);
+			map.put("ItemDepart", arrDepart[i]);
+			map.put("ItemFor", arrFor[i]);
+			map.put("ItemAgainst", arrAgainst[i]);
+			listItem.add(map);
+		}
+		
+		listItemAdapter.setViewBinder(new ViewBinder() {    
+            
+            public boolean setViewValue(View view, Object data,    
+                    String textRepresentation) {    
+                if (view instanceof ImageView  && data instanceof Bitmap) {    
+                    ImageView iv = (ImageView) view;
+                    iv.setImageBitmap((Bitmap) data);    
+                    return true;    
+                } else {
+                	return false;
+                }
+            }    
+        });
+		list.setAdapter(listItemAdapter);
+		//listItemAdapter.notifyDataSetChanged();
+
+		list.setOnItemClickListener(new OnItemClickListener() {
+			//String bImage = "";
+			String bName = "";
+			String bDepart = "";
+			String bFor = "";
+			String bAgainst = "";
+			Bitmap bImage;
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, final long id) {
+				// TODO Auto-generated method stub
+				final int peopleToBeShown = position;
+				// Toast.makeText(ListProfessor.this, "No. " +
+				// peopleToBeShown,
+				// Toast.LENGTH_SHORT).show();
+				HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
+						.getItemAtPosition(peopleToBeShown);
+				//bImage = itemAtPosition.get("ItemImage").toString();
+				// Toast.makeText(ListProfessor.this, "No. " + bImage,
+				// Toast.LENGTH_SHORT).show();
+				bName = itemAtPosition.get("ItemName").toString();
+				setTitle("嚙踝蕭嚙瘤" + bName);
+				bDepart = itemAtPosition.get("ItemDepart").toString();
+				bFor = itemAtPosition.get("ItemFor").toString();
+				bAgainst = itemAtPosition.get("ItemAgainst").toString();
+				bImage = (Bitmap) itemAtPosition.get("ItemImage");
+				Intent newAct = new Intent();
+				newAct.setClass(ListProfessor.this, Induvidual.class);
+				// 嚙諍伐蕭 Bundle 嚙踝蕭嚙踝蕭
+				Bundle bData = new Bundle();
+
+				// 嚙篇嚙皚嚙踝蕭嚙�Bundle 嚙踝蕭
+				//bData.putString("bImage", bImage);
+				bData.putString("bName", bName);
+				bData.putString("bDepart", bDepart);
+				bData.putString("bFor", bFor);
+				bData.putString("bAgainst", bAgainst);
+				bData.putString("dept", "cs");
+				newAct.putExtras(bData);
+				newAct.putExtra("bImage", bImage);
+				startActivity(newAct); // Need to change this to startActivityForResult()
+			}
+		});
 	}
 	
 	public void postData(int action, String url) throws JSONException {
     	// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost("http://ee.hac.tw:2323/insertdb.php");
+		HttpPost httppost = new HttpPost(url);
 		JSONObject j = new JSONObject();
 		
 		try {
@@ -235,11 +218,11 @@ public class ListProfessor extends Activity implements ServerCall {
 			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "Client Protocol Exception:");
 			e.printStackTrace();
 		} catch (IOException e) {
     		// TODO Auto-generated catch block
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "IO Exception:");
 			e.printStackTrace();
 		}
     }
@@ -260,6 +243,7 @@ public class ListProfessor extends Activity implements ServerCall {
 		    	arrAgainst[i] = ja.getJSONObject(i).getInt("Bad");
     		}
     	} catch (JSONException je) {
+    		Log.e(TAG, "Parse JSON Errror:");
     		je.printStackTrace();
     	}
     }
@@ -279,4 +263,28 @@ public class ListProfessor extends Activity implements ServerCall {
         
         return mBitmap;	
 	}
+    
+    private class NetworkTask extends AsyncTask<Integer, Void, Void> {
+    	
+    	ProgressDialog pd;
+    	
+    	protected void onPreExecute() {
+    		pd = ProgressDialog.show(ListProfessor.this, "", "Loading...Please wait...");
+    	}
+    	
+    	protected Void doInBackground(Integer... x) {
+    		try {
+    			postData(x[0].intValue(), listURL);
+    		} catch (JSONException e) {
+    			Log.e(TAG, "Network Call Error:");
+    			e.printStackTrace();
+    		}
+    		return null;
+    	}
+    	
+    	protected void onPostExecute(Void nada) {
+    		pd.dismiss();
+    		populateList();
+    	}
+    }
 }
