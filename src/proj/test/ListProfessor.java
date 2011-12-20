@@ -34,13 +34,10 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 
-public class ListProfessor extends Activity {
+public class ListProfessor extends Activity implements ServerCall {
 	private static final String TAG = "ListProfessor";
 	
-	private static final int POST_ADD = 0;
-	private static final int POST_READ = 1;
-	private static final int POST_TOP5 = 2;
-	
+	private final String listURL = "http://ee.hac.tw:2323/insertdb.php";
 	private String responseString;
 	private int queryLength;
 	
@@ -82,7 +79,7 @@ public class ListProfessor extends Activity {
 		if (depts.compareTo("cs") == 0) {
 			list = (ListView) findViewById(R.id.listView_professor);
 			try {
-				postData(POST_READ);
+				postData(ServerCall.POST_READ, listURL);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -112,13 +109,13 @@ public class ListProfessor extends Activity {
                 
 	            public boolean setViewValue(View view, Object data,    
 	                    String textRepresentation) {    
-	                if(view instanceof ImageView  && data instanceof Bitmap){    
-	                    ImageView iv = (ImageView) view;    
-	                    
+	                if (view instanceof ImageView  && data instanceof Bitmap) {    
+	                    ImageView iv = (ImageView) view;
 	                    iv.setImageBitmap((Bitmap) data);    
 	                    return true;    
-	                }else    
-	                return false;    
+	                } else {
+	                	return false;
+	                }
 	            }    
 	        });
 			list.setAdapter(listItemAdapter);
@@ -130,6 +127,7 @@ public class ListProfessor extends Activity {
 				String bDepart = "";
 				String bFor = "";
 				String bAgainst = "";
+				Bitmap bImage;
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -149,6 +147,7 @@ public class ListProfessor extends Activity {
 					bDepart = itemAtPosition.get("ItemDepart").toString();
 					bFor = itemAtPosition.get("ItemFor").toString();
 					bAgainst = itemAtPosition.get("ItemAgainst").toString();
+					bImage = (Bitmap) itemAtPosition.get("ItemImage");
 					Intent newAct = new Intent();
 					newAct.setClass(ListProfessor.this, Induvidual.class);
 					// �إ� Bundle ����
@@ -162,6 +161,7 @@ public class ListProfessor extends Activity {
 					bData.putString("bAgainst", bAgainst);
 					bData.putString("dept", "cs");
 					newAct.putExtras(bData);
+					newAct.putExtra("bImage", bImage);
 					startActivity(newAct); // Need to change this to startActivityForResult()
 				}
 			});
@@ -169,7 +169,7 @@ public class ListProfessor extends Activity {
 		}
 	}
 	
-	private void postData(int action) throws JSONException {
+	public void postData(int action, String url) throws JSONException {
     	// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://ee.hac.tw:2323/insertdb.php");
@@ -177,14 +177,6 @@ public class ListProfessor extends Activity {
 		
 		try {
 			switch (action) {
-			/*case POST_ADD:
-				//JSON data
-				j.put("Command", "New");
-				j.put("Firstname", First+count);
-				j.put("Lastname", Last+count);
-				j.put("Major", Major+count);
-				j.put("Comment", Comment+count);
-				break;*/
 			case POST_READ:
 				j.put("Command", "Read");
 				break;
@@ -205,7 +197,7 @@ public class ListProfessor extends Activity {
 			{
 				InputStream is = response.getEntity().getContent();
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF8"));
 				StringBuilder sb = new StringBuilder();
 
 				String line = null;
@@ -252,7 +244,7 @@ public class ListProfessor extends Activity {
 		}
     }
     
-    private void parseJSON(JSONArray ja) {
+    public void parseJSON(JSONArray ja) {
     	queryLength = ja.length();
     	arrImage = new String[queryLength];
     	arrName = new String[queryLength];
@@ -264,8 +256,8 @@ public class ListProfessor extends Activity {
     			arrImage[i] = ja.getJSONObject(i).getString("Picture");
 		    	arrName[i] = ja.getJSONObject(i).getString("Name");
 		    	arrDepart[i] = ja.getJSONObject(i).getString("Dept");
-		    	arrFor[i] = ja.getJSONObject(i).getInt("For");
-		    	arrAgainst[i] = ja.getJSONObject(i).getInt("Against");
+		    	arrFor[i] = ja.getJSONObject(i).getInt("Good");
+		    	arrAgainst[i] = ja.getJSONObject(i).getInt("Bad");
     		}
     	} catch (JSONException je) {
     		je.printStackTrace();
@@ -274,16 +266,15 @@ public class ListProfessor extends Activity {
     
     public Bitmap getBitmap(int i){
         Bitmap mBitmap = null;    
-        try {    
+        try {
             URL url = new URL(arrImage[i]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();    
             InputStream is = conn.getInputStream();    
-            mBitmap = BitmapFactory.decodeStream(is);    
-                
+            mBitmap = BitmapFactory.decodeStream(is);
         } catch (MalformedURLException e) {    
             e.printStackTrace();
         } catch (IOException e) {    	
-            e.printStackTrace();    
+            e.printStackTrace();
         }
         
         return mBitmap;	
