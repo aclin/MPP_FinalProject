@@ -2,8 +2,10 @@
 <resources>
 
     <string name="hello">Hello World, FinalProjectActivity!</string>
-    
+
     <!-- The name of the application. -->
     <string name="app_name">Professor Rating</string>
+    <string name="search_label">search_label</string>
+    <string name="search_hint">Professor Search</string>
 
 </resources>

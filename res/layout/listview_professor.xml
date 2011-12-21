@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/LinearLayout02"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/linearLayout_Search" >
@@ -54,13 +54,13 @@
 
             <RatingBar
                 android:id="@+id/ratingBar1"
-                style="?android:attr/ratingBarStyleIndicator"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
+
             <RelativeLayout
                 android:id="@+id/relativeLayout1"
-                android:layout_width="match_parent"
+                android:layout_width="172dp"
                 android:layout_height="wrap_content" >
 
                 <TextView
