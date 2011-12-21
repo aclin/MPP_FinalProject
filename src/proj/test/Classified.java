@@ -41,34 +41,66 @@ public class Classified extends Activity implements View.OnClickListener {
 		}
 
 		ImageView ivdepart1 = (ImageView) findViewById(R.id.ImageView_depart1);
-		ivdepart1.setOnClickListener(this);
 		ImageView ivdepart2 = (ImageView) findViewById(R.id.ImageView_depart2);
-		ivdepart2.setOnClickListener(this);
 		ImageView ivdepart3 = (ImageView) findViewById(R.id.ImageView_depart3);
-		ivdepart3.setOnClickListener(this);
 		ImageView ivdepart4 = (ImageView) findViewById(R.id.ImageView_depart4);
-		ivdepart4.setOnClickListener(this);
 		ImageView ivdepart5 = (ImageView) findViewById(R.id.ImageView_depart5);
-		ivdepart5.setOnClickListener(this);
 		ImageView ivdepart6 = (ImageView) findViewById(R.id.ImageView_depart6);
-		ivdepart6.setOnClickListener(this);
 		ImageView ivdepart7 = (ImageView) findViewById(R.id.ImageView_depart7);
-		ivdepart7.setOnClickListener(this);
 		ImageView ivdepart8 = (ImageView) findViewById(R.id.ImageView_depart8);
-		ivdepart8.setOnClickListener(this);
 		ImageView ivdepart9 = (ImageView) findViewById(R.id.ImageView_depart9);
-		ivdepart9.setOnClickListener(this);
 		ImageView ivdepart10 = (ImageView) findViewById(R.id.ImageView_depart10);
-		ivdepart10.setOnClickListener(this);
 		ImageView ivdepart11 = (ImageView) findViewById(R.id.ImageView_depart11);
-		ivdepart11.setOnClickListener(this);
 		ImageView ivdepart12 = (ImageView) findViewById(R.id.ImageView_depart12);
+		
+		ivdepart1.setOnClickListener(this);
+		ivdepart2.setOnClickListener(this);
+		ivdepart3.setOnClickListener(this);
+		ivdepart4.setOnClickListener(this);
+		ivdepart5.setOnClickListener(this);
+		ivdepart6.setOnClickListener(this);
+		ivdepart7.setOnClickListener(this);
+		ivdepart8.setOnClickListener(this);
+		ivdepart9.setOnClickListener(this);
+		ivdepart10.setOnClickListener(this);
+		ivdepart11.setOnClickListener(this);
 		ivdepart12.setOnClickListener(this);
 	}
-
+	
+	public void onRestart(){
+		super.onRestart();
+		
+		ImageView ivdepart1 = (ImageView) findViewById(R.id.ImageView_depart1);
+		ImageView ivdepart2 = (ImageView) findViewById(R.id.ImageView_depart2);
+		ImageView ivdepart3 = (ImageView) findViewById(R.id.ImageView_depart3);
+		ImageView ivdepart4 = (ImageView) findViewById(R.id.ImageView_depart4);
+		ImageView ivdepart5 = (ImageView) findViewById(R.id.ImageView_depart5);
+		ImageView ivdepart6 = (ImageView) findViewById(R.id.ImageView_depart6);
+		ImageView ivdepart7 = (ImageView) findViewById(R.id.ImageView_depart7);
+		ImageView ivdepart8 = (ImageView) findViewById(R.id.ImageView_depart8);
+		ImageView ivdepart9 = (ImageView) findViewById(R.id.ImageView_depart9);
+		ImageView ivdepart10 = (ImageView) findViewById(R.id.ImageView_depart10);
+		ImageView ivdepart11 = (ImageView) findViewById(R.id.ImageView_depart11);
+		ImageView ivdepart12 = (ImageView) findViewById(R.id.ImageView_depart12);
+		
+		ivdepart1.setBackgroundColor(0x000000);
+		ivdepart2.setBackgroundColor(0x000000);
+		ivdepart3.setBackgroundColor(0x000000);
+		ivdepart4.setBackgroundColor(0x000000);
+		ivdepart5.setBackgroundColor(0x000000);
+		ivdepart6.setBackgroundColor(0x000000);
+		ivdepart7.setBackgroundColor(0x000000);
+		ivdepart8.setBackgroundColor(0x000000);
+		ivdepart9.setBackgroundColor(0x000000);
+		ivdepart10.setBackgroundColor(0x000000);
+		ivdepart11.setBackgroundColor(0x000000);
+		ivdepart12.setBackgroundColor(0x000000);
+	}
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		v.setBackgroundColor(0xFF94E938);
+		
 		Intent newAct;
 		Bundle bData = new Bundle();
 		newAct = new Intent();

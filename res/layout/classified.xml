@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout5"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
@@ -60,7 +60,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
@@ -92,7 +92,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout6"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_weight="1" >
@@ -123,7 +123,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout01"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
@@ -154,7 +154,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout7"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_weight="1" >
@@ -185,7 +185,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout02"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
@@ -216,7 +216,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout8"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_weight="1" >
@@ -245,7 +245,7 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout03"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
 
