@@ -46,7 +46,16 @@
             android:layout_width="match_parent"
             android:layout_height="326dp" >
         </ListView>
+            
     </LinearLayout>
+    
+	<TextView android:id="@+id/tvLoading"
+	    android:layout_width="fill_parent"
+	    android:layout_height="30dp"
+	    android:gravity="center"
+	    android:layout_above="@+id/linearLayout_Action"
+	    android:background="#55CCCCCC"
+	    android:text="Loading..."/>
 
     <!-- Action -->
 
