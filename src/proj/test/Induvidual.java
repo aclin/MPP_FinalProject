@@ -43,9 +43,8 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 	private Bitmap bImage;
 	private String bName;
 	private String bDepart;
-	private String bFor;
-	private String bAgainst;
-	private String bDept;
+	private int bFor;
+	private int bAgainst;
 	
 	private Button btFor;
 	private Button btAgainst;
@@ -96,9 +95,8 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			e.printStackTrace();
 		}
 		bDepart = bData.getString("bDepart");
-		bFor = bData.getString("bFor");
-		bAgainst = bData.getString("bAgainst");
-		bDept = bData.getString("dept");
+		bFor = bData.getInt("bFor");
+		bAgainst = bData.getInt("bAgainst");
 		bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
 		
 		tvName.setText(bName + " �б�");
@@ -110,33 +108,42 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		// TODO Auto-generated method stub
 		String myImgitem = null;
 		Bundle bData = new Bundle();
+		Intent i_return;
 		switch (v.getId()) {
 		case R.id.button_For:
-			myImgitem = "Good!!!!";
-			int forValue = Integer.parseInt(bFor);
+			myImgitem = "你推薦了" + bName + "教授";
+			int forValue = bFor;
 			forValue++;
-			bFor = forValue + "";
+			bFor = forValue;
 			try {
 				postData(POST_GOOD, rateURL);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			Intent i_return = new Intent();
-			i_return.putExtra("bFor", forValue);
+			i_return = new Intent();
+			bData.putInt("bFor", bFor);
+			bData.putInt("bAgainst", bAgainst);
+			bData.putString("bName", bName);
+			i_return.putExtras(bData);
 			setResult(RESULT_OK, i_return);
-			finish();
 			finish();
 			break;
 		case R.id.button_Against:
-			myImgitem = "Uhhhhhh";
-			int againstValue = Integer.parseInt(bAgainst);
+			myImgitem = "你不推薦" + bName + "教授";
+			int againstValue = bAgainst;
 			againstValue++;
-			bAgainst = againstValue + "";
+			bAgainst = againstValue;
 			try {
 				postData(POST_BAD, rateURL);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			i_return = new Intent();
+			bData.putInt("bFor", bFor);
+			bData.putInt("bAgainst", bAgainst);
+			bData.putString("bName", bName);
+			i_return.putExtras(bData);
+			setResult(RESULT_OK, i_return);
 			finish();
 			break;
 		case R.id.imageView_Search:
@@ -148,7 +155,7 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		default:
 			break;
 		}
-		Toast.makeText(Induvidual.this, myImgitem, Toast.LENGTH_SHORT).show();
+		Toast.makeText(Induvidual.this, myImgitem, Toast.LENGTH_LONG).show();
 	}
 	
 	public void postData(int action, String url) throws JSONException {

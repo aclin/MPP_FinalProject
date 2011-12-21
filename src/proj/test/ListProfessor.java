@@ -48,8 +48,6 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 	private int queryLength;
 	
 	private int chosenPosition;
-	private int chosenFor;
-	private int chosenAgainst;
 	
 	ListView list;
 	TextView tvLoading;
@@ -107,81 +105,79 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 		list.setAdapter(listItemAdapter);
 		
 		if (depts.compareTo("cs") == 0) {
-			
-			//new NetworkTask().execute(ServerCall.POST_READ);
 			new AsyncListTask().execute(ServerCall.POST_READ);
 		}
 	}
 	
-	private void populateList() {
-		
-		for (int i = 0; i < queryLength; i++) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("ItemImage", getBitmap(i));
-			map.put("ItemName", arrName[i]);
-			map.put("ItemDepart", arrDepart[i]);
-			map.put("ItemFor", arrFor[i]);
-			map.put("ItemAgainst", arrAgainst[i]);
-			listItem.add(map);
-		}
-		
-		listItemAdapter.setViewBinder(new ViewBinder() {    
-            
-            public boolean setViewValue(View view, Object data,    
-                    String textRepresentation) {    
-                if (view instanceof ImageView  && data instanceof Bitmap) {    
-                    ImageView iv = (ImageView) view;
-                    iv.setImageBitmap((Bitmap) data);    
-                    return true;    
-                } else {
-                	return false;
-                }
-            }    
-        });
-		listItemAdapter.notifyDataSetChanged();
-
-		list.setOnItemClickListener(new OnItemClickListener() {
-			//String bImage = "";
-			String bName = "";
-			String bDepart = "";
-			String bFor = "";
-			String bAgainst = "";
-			Bitmap bImage;
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, final long id) {
-				// TODO Auto-generated method stub
-				final int peopleToBeShown = position;
-				
-				HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
-						.getItemAtPosition(peopleToBeShown);
-				
-				bName = itemAtPosition.get("ItemName").toString();
-				
-				setTitle("選取了"+ bName);
-				
-				bDepart = itemAtPosition.get("ItemDepart").toString();
-				bFor = itemAtPosition.get("ItemFor").toString();
-				bAgainst = itemAtPosition.get("ItemAgainst").toString();
-				bImage = (Bitmap) itemAtPosition.get("ItemImage");
-				
-				Intent newAct = new Intent();
-				newAct.setClass(ListProfessor.this, Induvidual.class);
-				
-				Bundle bData = new Bundle();
-				
-				bData.putString("bName", bName);
-				bData.putString("bDepart", bDepart);
-				bData.putString("bFor", bFor);
-				bData.putString("bAgainst", bAgainst);
-				bData.putString("dept", "cs");
-				newAct.putExtras(bData);
-				newAct.putExtra("bImage", bImage);
-				startActivity(newAct); // Need to change this to startActivityForResult()
-			}
-		});
-	}
+//	private void populateList() {
+//		
+//		for (int i = 0; i < queryLength; i++) {
+//			HashMap<String, Object> map = new HashMap<String, Object>();
+//			map.put("ItemImage", getBitmap(i));
+//			map.put("ItemName", arrName[i]);
+//			map.put("ItemDepart", arrDepart[i]);
+//			map.put("ItemFor", arrFor[i]);
+//			map.put("ItemAgainst", arrAgainst[i]);
+//			listItem.add(map);
+//		}
+//		
+//		listItemAdapter.setViewBinder(new ViewBinder() {    
+//            
+//            public boolean setViewValue(View view, Object data,    
+//                    String textRepresentation) {    
+//                if (view instanceof ImageView  && data instanceof Bitmap) {    
+//                    ImageView iv = (ImageView) view;
+//                    iv.setImageBitmap((Bitmap) data);    
+//                    return true;    
+//                } else {
+//                	return false;
+//                }
+//            }    
+//        });
+//		listItemAdapter.notifyDataSetChanged();
+//
+//		list.setOnItemClickListener(new OnItemClickListener() {
+//			//String bImage = "";
+//			String bName = "";
+//			String bDepart = "";
+//			String bFor = "";
+//			String bAgainst = "";
+//			Bitmap bImage;
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> arg0, View arg1,
+//					int position, final long id) {
+//				// TODO Auto-generated method stub
+//				final int peopleToBeShown = position;
+//				
+//				HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
+//						.getItemAtPosition(peopleToBeShown);
+//				
+//				bName = itemAtPosition.get("ItemName").toString();
+//				
+//				setTitle("選取了"+ bName);
+//				
+//				bDepart = itemAtPosition.get("ItemDepart").toString();
+//				bFor = itemAtPosition.get("ItemFor").toString();
+//				bAgainst = itemAtPosition.get("ItemAgainst").toString();
+//				bImage = (Bitmap) itemAtPosition.get("ItemImage");
+//				
+//				Intent newAct = new Intent();
+//				newAct.setClass(ListProfessor.this, Induvidual.class);
+//				
+//				Bundle bData = new Bundle();
+//				
+//				bData.putString("bName", bName);
+//				bData.putString("bDepart", bDepart);
+//				bData.putString("bFor", bFor);
+//				bData.putString("bAgainst", bAgainst);
+//				bData.putString("dept", "cs");
+//				newAct.putExtras(bData);
+//				newAct.putExtra("bImage", bImage);
+//				startActivity(newAct); // Need to change this to startActivityForResult()
+//			}
+//		});
+//	}
 	
 	public void postData(int action, String url) throws JSONException {
     	// Create a new HttpClient and Post Header
@@ -295,32 +291,32 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
         return mBitmap;	
 	}
     
-    private class NetworkTask extends AsyncTask<Integer, Void, Void> {
-    	
-    	ProgressDialog pd;
-    	
-    	@Override
-    	protected void onPreExecute() {
-    		pd = ProgressDialog.show(ListProfessor.this, "", "Loading...Please wait...");
-    	}
-    	
-    	@Override
-    	protected Void doInBackground(Integer... params) {
-    		try {
-    			postData(params[0].intValue(), listURL);
-    		} catch (JSONException e) {
-    			Log.e(TAG, "Network Call Error:");
-    			e.printStackTrace();
-    		}
-    		return null;
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(Void unused) {
-    		pd.dismiss();
-    		populateList();
-    	}
-    }
+//    private class NetworkTask extends AsyncTask<Integer, Void, Void> {
+//    	
+//    	ProgressDialog pd;
+//    	
+//    	@Override
+//    	protected void onPreExecute() {
+//    		pd = ProgressDialog.show(ListProfessor.this, "", "Loading...Please wait...");
+//    	}
+//    	
+//    	@Override
+//    	protected Void doInBackground(Integer... params) {
+//    		try {
+//    			postData(params[0].intValue(), listURL);
+//    		} catch (JSONException e) {
+//    			Log.e(TAG, "Network Call Error:");
+//    			e.printStackTrace();
+//    		}
+//    		return null;
+//    	}
+//    	
+//    	@Override
+//    	protected void onPostExecute(Void unused) {
+//    		pd.dismiss();
+//    		populateList();
+//    	}
+//    }
     
     private class AsyncListTask extends AsyncTask<Integer, HashMap<String, Object>, Void> {
 
@@ -366,43 +362,38 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 				//String bImage = "";
 				String bName = "";
 				String bDepart = "";
-				String bFor = "";
-				String bAgainst = "";
+				int bFor = 0;
+				int bAgainst = 0;
 				Bitmap bImage;
-
+				
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int position, final long id) {
 					// TODO Auto-generated method stub
-					final int peopleToBeShown = position;
-					// Toast.makeText(ListProfessor.this, "No. " +
-					// peopleToBeShown,
-					// Toast.LENGTH_SHORT).show();
-					HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
-							.getItemAtPosition(peopleToBeShown);
-					//bImage = itemAtPosition.get("ItemImage").toString();
-					// Toast.makeText(ListProfessor.this, "No. " + bImage,
-					// Toast.LENGTH_SHORT).show();
+					HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) listItem
+							.get(position);
+					
+					chosenPosition = position;
+					
 					bName = itemAtPosition.get("ItemName").toString();
 					setTitle("選取了" + bName);
 					bDepart = itemAtPosition.get("ItemDepart").toString();
-					bFor = itemAtPosition.get("ItemFor").toString();
-					bAgainst = itemAtPosition.get("ItemAgainst").toString();
+					bFor = (Integer) itemAtPosition.get("ItemFor");
+					bAgainst = (Integer) itemAtPosition.get("ItemAgainst");
 					bImage = (Bitmap) itemAtPosition.get("ItemImage");
 					Intent newAct = new Intent();
 					newAct.setClass(ListProfessor.this, Induvidual.class);
-					// ��隡 Bundle ���剖�頦
 					Bundle bData = new Bundle();
-
-					// �������哨�蕭Bundle ����					//bData.putString("bImage", bImage);
+					
 					bData.putString("bName", bName);
 					bData.putString("bDepart", bDepart);
-					bData.putString("bFor", bFor);
-					bData.putString("bAgainst", bAgainst);
+					bData.putInt("bFor", bFor);
+					bData.putInt("bAgainst", bAgainst);
 					bData.putString("dept", "cs");
+					Log.i(TAG, "bDepart: " + bDepart);
 					newAct.putExtras(bData);
 					newAct.putExtra("bImage", bImage);
-					startActivityForResult(newAct, INDIVIDUAL_REQUEST); // Need to change this to startActivityForResult()
+					startActivityForResult(newAct, INDIVIDUAL_REQUEST);
 				}
 			});
 		}
@@ -417,7 +408,14 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == INDIVIDUAL_REQUEST) {
-        	
+        	Bundle b = data.getExtras();
+        	Log.i(TAG, "Name: " + b.getString("bName"));
+        	Log.i(TAG, "For: " + b.getInt("bFor"));
+        	Log.i(TAG, "Against: " + b.getInt("bAgainst"));
+        	HashMap<String, Object> hm = listItem.get(chosenPosition);
+        	hm.put("ItemFor", b.getInt("bFor"));
+        	hm.put("ItemAgainst", b.getInt("bAgainst"));
+        	listItemAdapter.notifyDataSetChanged();
         }
     }
     
