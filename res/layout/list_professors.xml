@@ -20,8 +20,9 @@
 
         <ListView
             android:id="@+id/listView_professor"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" >
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:cacheColorHint="#00000000">
         </ListView>
     </LinearLayout>
     
@@ -49,8 +50,8 @@
 
         <RelativeLayout
             android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -79,8 +80,8 @@
 
         <RelativeLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -109,8 +110,8 @@
 
         <RelativeLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
 
