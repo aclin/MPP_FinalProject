@@ -6,31 +6,8 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <!-- Search -->
-
-    <LinearLayout
-        android:id="@+id/linearLayout_Search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
-
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="200dip"
-            android:layout_height="48dip"
-            android:layout_weight="1" >
-        </EditText>
-
-        <ImageView
-            android:id="@+id/imageView_Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_menu_search" />
-    </LinearLayout>
-
-    <!-- Action -->
+    <!--
+    Action 
 
     <LinearLayout
         android:id="@+id/linearLayout_Action"
@@ -128,8 +105,8 @@
         </RelativeLayout>
     </LinearLayout>
 
+    -->
     <!-- Start -->
-
 
     <!--
          ImageView
@@ -139,7 +116,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:background="#fff"
-        android:src="@drawable/professor" /
+        android:src="@drawable/professor" /
+
     -->
 
     <LinearLayout
@@ -160,33 +138,13 @@
             android:gravity="center_vertical|center"
             android:text="Professor John Smith"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
         <ImageView
             android:id="@+id/imageView_ItemImage"
             android:layout_width="95dp"
             android:layout_height="95dp"
             android:layout_gravity="center"
             android:src="@drawable/professor" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center_vertical|center"
-            android:text="Prof. Recommendation" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical|center" >
-
-            <RatingBar
-                android:id="@+id/ratingBar1"
-                style="?android:attr/ratingBarStyleIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <TextView
             android:id="@+id/textView2"
@@ -221,6 +179,26 @@
                 android:background="@drawable/green"
                 android:text="against"
                 android:textColor="@drawable/white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center_vertical|center"
+            android:text="Prof. Recommendation" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical|center" >
+
+            <RatingBar
+                android:id="@+id/ratingBar1"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 

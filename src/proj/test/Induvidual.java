@@ -16,13 +16,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,17 +40,18 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 	private String bNameUTF8;
 	
 	//private String bImage;
+	private Bitmap bImage;
 	private String bName;
 	private String bDepart;
 	private String bFor;
 	private String bAgainst;
 	private String bDept;
-	private Bitmap bImage;
 	
 	private Button btFor;
 	private Button btAgainst;
 	private ImageView ivImage;
 	private TextView tvName;
+
 
 	private void findView() {
 		ivImage = (ImageView) findViewById(R.id.imageView_ItemImage);
@@ -58,17 +65,28 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		btFor.setOnClickListener(this);
 		btAgainst.setOnClickListener(this);
 	}
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		//setContentView(R.layout.induvisual);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.induvisual);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.my_title);
+		TextView mTitleTextView = (TextView) findViewById(R.id.title_txt);
+		Button mBackBtn = (Button) findViewById(R.id.back_btn);
+		ImageView ivsearch = (ImageView) findViewById(R.id.imageView_Search);
+		mTitleTextView.setText("Professor Rating");
+		mBackBtn.setOnClickListener(this);
+		ivsearch.setOnClickListener(this);
+		
 		findView();
 		setListeners();
+		
 		Bundle bData = this.getIntent().getExtras();
-		//bImage = bData.getString("bImage");
 		bName = bData.getString("bName");
 		Log.i(TAG, "bName: " + bName);
 		try {
@@ -82,8 +100,7 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		bAgainst = bData.getString("bAgainst");
 		bDept = bData.getString("dept");
 		bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
-		//String strImg = "R.drawable." + bImage;
-		// ivImage.setImageResource(Integer.parseInt(strImg));
+		
 		tvName.setText(bName + " �б�");
 		ivImage.setImageBitmap(bImage);
 	}
@@ -104,13 +121,11 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			Intent newAct1 = new Intent();
-			newAct1.setClass(Induvidual.this, ListProfessor.class);
-			// �إ� Bundle ����
-			bData.putString("dept", "cs");
-			newAct1.putExtras(bData);
-			startActivity(newAct1); // Don't start new activity here;
-			// finish() and let previous activity handle aftermath
+			Intent i_return = new Intent();
+			i_return.putExtra("bFor", forValue);
+			setResult(RESULT_OK, i_return);
+			finish();
+			finish();
 			break;
 		case R.id.button_Against:
 			myImgitem = "Uhhhhhh";
@@ -122,12 +137,13 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			Intent newAct2 = new Intent();
-			newAct2.setClass(Induvidual.this, ListProfessor.class);
-			// �إ� Bundle ����
-			bData.putString("dept", "cs");
-			newAct2.putExtras(bData);
-			startActivity(newAct2);
+			finish();
+			break;
+		case R.id.imageView_Search:
+			onSearchRequested();
+			break;
+		case R.id.back_btn:
+			finish();
 			break;
 		default:
 			break;

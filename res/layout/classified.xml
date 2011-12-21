@@ -2,33 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <!-- Search -->
-
-    <LinearLayout
-        android:id="@+id/linearLayout_Search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
-
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="200dip"
-            android:layout_height="48dip"
-            android:layout_weight="1" >
-
-            <requestFocus />
-        </EditText>
-
-        <ImageView
-            android:id="@+id/imageView_Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_menu_search" />
-    </LinearLayout>
+    android:orientation="vertical">
 
     <!-- Classified -->
 
@@ -39,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/linearLayout_Search"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical" >
 
         <!-- First -->
@@ -53,126 +27,251 @@
             <ImageView
                 android:id="@+id/ImageView_depart1"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/wengshueh" />
 
             <ImageView
                 android:id="@+id/ImageView_depart2"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/gongshueh" />
 
             <ImageView
-                android:id="@+id/ImageView_depart3"
+                android:id="@+id/ImageView_depart5"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:src="@drawable/dianchi" />
+                android:src="@drawable/shenko" />
+
         </LinearLayout>
 
         <!-- Second -->
 
-        <View
+
+        <!--
+             View
             android:layout_width="wrap_content"
             android:layout_height="15dp"
-            android:background="#000000" />
+            android:background="#000000" /
+
+        -->
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="文學院" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="工學院" />
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="生科院" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/ImageView_depart3"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:src="@drawable/dianchi" />
 
             <ImageView
                 android:id="@+id/ImageView_depart4"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/yaiyi" />
 
             <ImageView
-                android:id="@+id/ImageView_depart5"
-                android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:src="@drawable/shenko" />
-
-            <ImageView
                 android:id="@+id/ImageView_depart6"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/gongwei" />
-        </LinearLayout>
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:background="#000000" />
+        </LinearLayout>
         <!-- Third -->
+
+        <LinearLayout
+            android:id="@+id/LinearLayout01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="電資學院" />
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="牙醫學院" />
+
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="公衛學院" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_weight="1" >
 
             <ImageView
                 android:id="@+id/ImageView_depart7"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/ishueh" />
 
             <ImageView
                 android:id="@+id/ImageView_depart8"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/sheiko" />
 
             <ImageView
-                android:id="@+id/ImageView_depart9"
+                android:id="@+id/ImageView_depart10"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:src="@drawable/shengnong" />
-        </LinearLayout>
+                android:src="@drawable/lisheuh" />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:background="#000000" />
+        </LinearLayout>
         <!-- Fourth -->
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/TextView05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="醫學院" />
+
+            <TextView
+                android:id="@+id/TextView04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="社科院" />
+
+            <TextView
+                android:id="@+id/TextView08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="理學院" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/ImageView_depart10"
+                android:id="@+id/ImageView_depart9"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:src="@drawable/lisheuh" />
+                android:src="@drawable/shengnong" />
 
             <ImageView
                 android:id="@+id/ImageView_depart11"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/guanli" />
 
             <ImageView
                 android:id="@+id/ImageView_depart12"
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:src="@drawable/fashueh" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/TextView06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="生農學院" />
+
+            <TextView
+                android:id="@+id/TextView07"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="管理學院" />
+
+            <TextView
+                android:id="@+id/TextView09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:text="法律學院" />
         </LinearLayout>
     </LinearLayout>
 

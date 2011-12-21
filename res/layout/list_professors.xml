@@ -6,29 +6,6 @@
     android:focusable="true"
     android:focusableInTouchMode="true" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout_Search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
-
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="200dip"
-            android:layout_height="48dip"
-            android:layout_weight="1" >
-
-        </EditText>
-
-        <ImageView
-            android:id="@+id/imageView_Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_menu_search" />
-    </LinearLayout>
-
     <!-- Professor list -->
 
     <LinearLayout
@@ -44,20 +21,20 @@
         <ListView
             android:id="@+id/listView_professor"
             android:layout_width="match_parent"
-            android:layout_height="326dp" >
+            android:layout_height="fill_parent" >
         </ListView>
-            
     </LinearLayout>
     
-	<TextView android:id="@+id/tvLoading"
+<TextView android:id="@+id/tvLoading"
 	    android:layout_width="fill_parent"
 	    android:layout_height="30dp"
+	    android:layout_alignParentBottom="true"
 	    android:gravity="center"
 	    android:layout_above="@+id/linearLayout_Action"
 	    android:background="#55CCCCCC"
 	    android:text="Loading..."/>
-
-    <!-- Action -->
+    <!--
+    Action 
 
     <LinearLayout
         android:id="@+id/linearLayout_Action"
@@ -155,5 +132,6 @@
                 android:textColor="@drawable/black" />
         </RelativeLayout>
     </LinearLayout>
+    -->
 
 </RelativeLayout>

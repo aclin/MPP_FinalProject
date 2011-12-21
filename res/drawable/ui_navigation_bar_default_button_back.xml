@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- enabled = false -->
+	<item 
+		android:state_enabled="false"
+        android:drawable="@drawable/ui_navigation_bar_default_button_back_pressed" />
+    
+    <!-- pressed = true -->
+    <item 
+    	android:state_pressed="true" 
+    	android:state_enabled="true"
+        android:drawable="@drawable/ui_navigation_bar_default_button_back_pressed" />
+    
+    <!-- focused = true -->
+    <item 
+    	android:state_focused="true" 
+    	android:state_enabled="true"
+        android:drawable="@drawable/ui_navigation_bar_default_button_back_pressed" />
+        
+    <!-- enabled = true  -->
+    <item android:drawable="@drawable/ui_navigation_bar_default_button_back_normal"/>
+    
+    
+   
+</selector>
