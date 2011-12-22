@@ -43,6 +43,15 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 	private static final String TAG = "ListProfessor";
 	private static final int INDIVIDUAL_REQUEST = 0;
 	
+	private static final String[] deptsInAbbr = new String[] { "cl", "forex",
+		"history", "philo", "anthro", "libs", "japan", "theatre", "ce",
+		"me", "che", "esoe", "mse", "lifescience", "bst", "ee", "cs",
+		"dod", "ph", "med", "rx", "nurse", "clsmb", "ot", "pt", "politics",
+		"econ", "sociology", "sw", "math", "phys", "ch", "gl", "psy",
+		"geog", "as", "agron", "ae", "ac", "ppm", "fo", "ansc", "agec",
+		"hort", "bicd", "bime", "entomol", "dvm", "ba", "acc", "fin", "ib",
+		"im", "law" };
+	
 	private final String listURL = "http://ee.hac.tw:2323/insertdb.php";
 	private String responseString;
 	private int queryLength;
@@ -53,6 +62,7 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 	TextView tvLoading;
 	ArrayList<HashMap<String, Object>> listItem;
 	SimpleAdapter listItemAdapter;
+	String depts;
 	
 	private String[] arrImage;
 	private String[] arrName;
@@ -91,7 +101,8 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 		tvLoading = (TextView) findViewById(R.id.tvLoading);
 		
 		Bundle bData = this.getIntent().getExtras();
-		String depts = bData.getString("dept");
+		depts = bData.getString("dept");
+		Log.i(TAG, "dept thingy: " + depts);
 		
 		listItem = new ArrayList<HashMap<String, Object>>();
 		listItemAdapter = new SimpleAdapter(this,
@@ -104,9 +115,14 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 		
 		list.setAdapter(listItemAdapter);
 		
-		if (depts.compareTo("cs") == 0) {
-			new AsyncListTask().execute(ServerCall.POST_READ);
+		for (int i = 0; i < deptsInAbbr.length; i++) {
+			if (deptsInAbbr[i].equals(depts))
+					new AsyncListTask().execute(ServerCall.POST_READ);
 		}
+		
+		/*if (depts.compareTo("cs") == 0) {
+			new AsyncListTask().execute(ServerCall.POST_READ);
+		}*/
 	}
 	
 //	private void populateList() {
@@ -189,6 +205,8 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 			switch (action) {
 			case POST_READ:
 				j.put("Command", "Read");
+				j.put("Dept", depts);
+				Log.i(TAG, "DEPTS: " + depts);
 				break;
 			}
 			
@@ -281,7 +299,10 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
             URL url = new URL(arrImage[i]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();    
             InputStream is = conn.getInputStream();    
-            mBitmap = BitmapFactory.decodeStream(is);
+            mBitmap = BitmapFactory.decodeStream(is, null, null);
+            is.close();
+            is = null;
+            System.gc();
         } catch (MalformedURLException e) {    
             e.printStackTrace();
         } catch (IOException e) {    	
@@ -377,7 +398,7 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 					
 					bName = itemAtPosition.get("ItemName").toString();
 					setTitle("選取了" + bName);
-					bDepart = itemAtPosition.get("ItemDepart").toString();
+					//bDepart = itemAtPosition.get("ItemDepart").toString();
 					bFor = (Integer) itemAtPosition.get("ItemFor");
 					bAgainst = (Integer) itemAtPosition.get("ItemAgainst");
 					bImage = (Bitmap) itemAtPosition.get("ItemImage");
@@ -386,10 +407,11 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 					Bundle bData = new Bundle();
 					
 					bData.putString("bName", bName);
-					bData.putString("bDepart", bDepart);
+					//bData.putString("bDepart", bDepart);
+					bData.putString("bDepart", depts);
 					bData.putInt("bFor", bFor);
 					bData.putInt("bAgainst", bAgainst);
-					bData.putString("dept", "cs");
+					//bData.putString("dept", "cs");
 					Log.i(TAG, "bDepart: " + bDepart);
 					newAct.putExtras(bData);
 					newAct.putExtra("bImage", bImage);

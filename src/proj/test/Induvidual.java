@@ -169,10 +169,12 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			case POST_GOOD:
 				j.put("Command", "Good");
 				j.put("Name", bNameUTF8);
+				j.put("Dept", bDepart);
 				break;
 			case POST_BAD:
 				j.put("Command", "Bad");
 				j.put("Name", bNameUTF8);
+				j.put("Dept", bDepart);
 				break;
 			}
 			Log.i(TAG, "JSON Object: " + j.toString());

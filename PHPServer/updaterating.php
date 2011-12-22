@@ -1,5 +1,6 @@
 ﻿<?php
 	require('dbaccess.php');
+	require('data.php');
 	$json = $_SERVER['HTTP_JSON'];	
 	$data = json_decode($json);
 	/*$log = fopen("log.txt", "w") or die("can't open file");
@@ -22,17 +23,29 @@
 		case "Good":
 			mysql_select_db("ajatest", $con);
 			$name = $data->Name;
-			$q = "UPDATE college_eecs_csie SET Good = Good + 1 WHERE Name='".$name."'";
+			$dept = $data->Dept;
+			for ($i = 0; $i < count($departments); $i++) {
+				if ($departments[$i] == $dept) {
+					break;
+				}
+			}
+			$q = "UPDATE ".$tables[$i]." SET Good = Good + 1 WHERE Name='".$name."'";
 			mysql_query($q);
-			$q = "UPDATE college_eecs_csie SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
+			$q = "UPDATE ".$tables[$i]." SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
 			mysql_query($q);
 			break;
 		case "Bad":
 			mysql_select_db("ajatest", $con);
 			$name = $data->Name;
-			$q = "UPDATE college_eecs_csie SET Bad = Bad + 1 WHERE Name='".$name."'";
+			$dept = $data->Dept;
+			for ($i = 0; $i < count($departments); $i++) {
+				if ($departments[$i] == $dept) {
+					break;
+				}
+			}
+			$q = "UPDATE ".$tables[$i]." SET Bad = Bad + 1 WHERE Name='".$name."'";
 			mysql_query($q);
-			$q = "UPDATE college_eecs_csie SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
+			$q = "UPDATE ".$tables[$i]." SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
 			mysql_query($q);
 			break;
 	}

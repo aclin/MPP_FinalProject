@@ -1,7 +1,10 @@
 ﻿<?php
 	require('dbaccess.php');
+	require('data.php');
 	$json = $_SERVER['HTTP_JSON'];
 	$data = json_decode($json);
+	$log = fopen("log.txt", "w") or die("can't open file");
+	fwrite($log, $json."\n");
 	
 	$con = mysql_connect("localhost", $user, $access);
 	if (!$con) {
@@ -16,6 +19,7 @@
 	mysql_query("SET NAMES 'utf8'",$con);
 	
 	$command = $data->Command;
+	fwrite($log, "Command: ".$command."\n");
 	if ($command == "New") {
 		$fname = $data->Firstname;
 		$lname = $data->Lastname;
@@ -26,10 +30,18 @@
 		mysql_query($q);
 		$sql = mysql_query('SELECT * FROM people');
 	} elseif ($command == "Read") {
+		$dept = $data->Dept;
+		fwrite($log, "Dept: ".$dept."\n");
 		mysql_select_db("ajatest", $con);
-		$sql = mysql_query('SELECT * FROM college_eecs_csie LIMIT 0, 5');
+		for ($i = 0; $i < count($departments); $i++) {
+			if ($departments[$i] == $dept) {
+				break;
+			}
+		}
+		$sql = mysql_query('SELECT * FROM '.$tables[$i].' LIMIT 0, 4');
 	}
 	
+	fclose($log);
 	while ($row = mysql_fetch_assoc($sql)) $output[] = $row;
 	print(json_encode($output));
 	mysql_close($con);
