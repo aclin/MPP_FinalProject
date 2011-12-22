@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="proj.test"
+    package="ntu.professor.rating"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -17,14 +17,14 @@
         android:theme="@style/my_theme" >
         <activity
             android:label="@string/app_name"
-            android:name=".FinalProjectActivity" >
+            android:name="FinalProjectActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListProfessor" >
+        <activity android:name="ListProfessor" >
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" >
                 </action>
@@ -39,7 +39,7 @@
         </activity>
         <activity android:name="ListTop5" >
         </activity>
-        <activity android:name=".Classified" >
+        <activity android:name="Classified" >
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" >
                 </action>

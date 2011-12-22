@@ -1,5 +1,6 @@
-package proj.test;
+package ntu.professor.rating;
 
+import ntu.professor.rating.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package proj.test;
+package ntu.professor.rating;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package proj.test;
+package ntu.professor.rating;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ntu.professor.rating.R;
 
 import android.app.Activity;
 import android.app.SearchManager;
