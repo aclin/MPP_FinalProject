@@ -38,7 +38,7 @@
 				break;
 			}
 		}
-		$sql = mysql_query('SELECT * FROM '.$tables[$i].' LIMIT 0, 4');
+		$sql = mysql_query('SELECT * FROM '.$tables[$i]);
 	}
 	
 	fclose($log);

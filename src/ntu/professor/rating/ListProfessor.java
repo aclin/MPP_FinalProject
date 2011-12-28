@@ -298,10 +298,36 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
     public Bitmap getBitmap(int i){
         Bitmap mBitmap = null;    
         try {
-            URL url = new URL(arrImage[i]);
+            // Get URL of image, make a connection to pull in the image stream
+        	URL url = new URL(arrImage[i]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();    
-            InputStream is = conn.getInputStream();    
-            mBitmap = BitmapFactory.decodeStream(is, null, null);
+            InputStream is = conn.getInputStream();
+            
+            // Set options to just decode the size of original image
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(is, null, opts);
+            
+            // Set maximum size
+            final int REQUIRED_SZ = 70;
+            
+            // Find scale value. Should be power of 2
+            int origWidth = opts.outWidth;
+            int origHeight = opts.outHeight;
+            int origDim = Math.max(origWidth, origHeight);
+            opts = new BitmapFactory.Options();
+            opts.inSampleSize = 1;
+            while (origDim > REQUIRED_SZ) {
+            	origDim /= 2;
+            	opts.inSampleSize *= 2;
+            }
+            
+            // Get stream again
+            conn = (HttpURLConnection) url.openConnection();    
+            is = conn.getInputStream();
+            
+            // Decode with new scaled option
+            mBitmap = BitmapFactory.decodeStream(is, null, opts);
             is.close();
             is = null;
             System.gc();
