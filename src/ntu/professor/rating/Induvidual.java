@@ -101,7 +101,7 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		bAgainst = bData.getInt("bAgainst");
 		bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
 		
-		tvName.setText(bName + " �б�");
+		tvName.setText(bName + " 教授");
 		ivImage.setImageBitmap(bImage);
 	}
 	
