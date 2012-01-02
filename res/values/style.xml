@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="my_theme" parent="@android:style/Theme.Light">
+		<item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleSize">40.0dip</item>
+        <item name="android:windowBackground">@drawable/iphone_bg</item>  
+        <item name="android:windowTitleBackgroundStyle">@style/window_title_background_style</item>
+        <item name="android:buttonStyle">@style/buttonStyle</item>
+	</style>
+	
+	<style name="buttonStyle" parent="@android:style/Widget.Button">		
+		<!-- <item name="android:layout_marginLeft">5dp</item>
+		<item name="android:layout_marginRight">5dp</item> -->
+		<item name="android:layout_centerVertical">true</item>
+    	<item name="android:layout_width">wrap_content</item>        
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">60dp</item>        
+ 		<item name="android:textSize">16sp</item>
+ 		<item name="android:textColor">#ffffffff</item>
+ 		<item name="android:shadowColor">#FF000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">0.2</item>        
+		<item name="android:background">@drawable/ui_navigation_bar_default_button</item>
+	</style>
+	<style name="title_bar_button_back" parent="@style/buttonStyle">
+ 		<item name="android:background">@drawable/ui_navigation_bar_default_button_back</item>
+ 	</style>
+	
+	 <style name="window_title_background_style">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@drawable/iphone_title_bar_blue</item>
+    </style>
+        
+    <style name="title_bar_text">
+ 		<item name="android:textColor">#ffffff</item>
+    	<item name="android:textSize">24sp</item>
+    	<item name="android:shadowColor">#FF000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">0.2</item>
+ 	</style>
+</resources>

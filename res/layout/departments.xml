@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!--
+    Search 
+
+    <RelativeLayout
+        android:id="@+id/linearLayout_Search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/imageView_Search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:src="@drawable/ic_menu_search" />
+
+    </RelativeLayout>
+
+    -->
+
+    <!-- Classified -->
+
+    <ListView
+        android:id="@+id/collegeList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout_Search"
+        android:layout_marginTop="30dp"
+        android:cacheColorHint="#00000000">
+    </ListView>
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:focusable="true" android:focusableInTouchMode="true"
+	android:orientation="vertical">
+
+	<LinearLayout android:id="@+id/linearLayout4"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_above="@+id/linearLayout_Action"
+		android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
+		android:layout_below="@+id/linearLayout_Search"
+		android:isScrollContainer="true" android:orientation="vertical">
+
+		<TextView android:id="@+id/textView_ItemName"
+			android:layout_width="fill_parent" android:layout_height="42dp"
+			android:gravity="center_vertical|center" android:text="Professor John Smith"
+			android:textAppearance="?android:attr/textAppearanceLarge" />
+
+		<ImageView android:id="@+id/imageView_ItemImage"
+			android:layout_width="95dp" android:layout_height="95dp"
+			android:layout_gravity="center" android:src="@drawable/professor" />
+
+		<TextView android:id="@+id/textView2" android:layout_width="fill_parent"
+			android:layout_height="30dp" android:gravity="center_vertical|center"
+			android:text="Vote this Prof.!!!" android:layout_marginTop="15dp" />
+
+
+		<LinearLayout android:id="@+id/linearLayout5"
+			android:layout_width="fill_parent" android:layout_height="50dp"
+			android:gravity="center_vertical|center" android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp">
+
+			<Button android:id="@+id/button_For" android:layout_width="100dp"
+				android:layout_height="fill_parent" android:layout_weight="1"
+				android:background="@drawable/red" android:text="推薦！"
+				android:textColor="@drawable/white" android:textSize="20dip" />
+
+			<View android:layout_width="10dip" android:layout_height="wrap_content"
+				android:background="#00000000" />
+
+
+			<Button android:id="@+id/button_Against" android:layout_width="100dp"
+				android:layout_height="fill_parent" android:layout_weight="1"
+				android:background="@drawable/green" android:text="不推..."
+				android:textColor="@drawable/white" android:textSize="20dip" />
+
+		</LinearLayout>
+
+		<TextView android:id="@+id/textView2" android:layout_width="fill_parent"
+			android:layout_height="30dp" android:gravity="center_vertical|center"
+			android:text="Prof. Recommendation" android:layout_marginTop="10dp" />
+
+		<LinearLayout android:id="@+id/linearLayout5"
+			android:layout_width="fill_parent" android:layout_height="50dp"
+			android:gravity="center_vertical|center">
+
+			<RatingBar android:id="@+id/ratingBar1"
+				style="?android:attr/ratingBarStyleIndicator" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+		</LinearLayout>
+	</LinearLayout>
+
+</RelativeLayout>
