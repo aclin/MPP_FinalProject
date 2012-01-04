@@ -5,4 +5,4 @@
 
 2012/01/03 - make entry image full, make the rating bar real, clean empty toast
 
-2012/01/04 - avoid duplicate voting by using preference
+2012/01/04 - avoid duplicate voting by using sharedpreference
