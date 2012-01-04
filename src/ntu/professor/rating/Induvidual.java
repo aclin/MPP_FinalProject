@@ -16,9 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ntu.professor.rating.R;
+import ntu.professor.rating.R.drawable;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +43,8 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 	private Bitmap bImage;
 	private String bName;
 	private String bDepart;
+	private SharedPreferences settings;
+	private int cntVoted; 
 	private int bFor;
 	private int bAgainst;
 	private float bRate;
@@ -83,7 +87,6 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		ivsearch.setOnClickListener(this);
 		
 		findView();
-		setListeners();
 		
 		Bundle bData = this.getIntent().getExtras();
 		bName = bData.getString("bName");
@@ -106,6 +109,27 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		tvName.setText(bName + " 教授");
 		ivImage.setImageBitmap(bImage);
 		rtBar.setRating(bRate);
+		
+		// To avoid duplicate voting
+		settings = getSharedPreferences("Preference", 0);
+		cntVoted = settings.getInt("number", 0);
+		int checkVoted = 0;
+		String checkNameVoted="";
+		
+		for(int i=1; i<=cntVoted; ++i){
+			checkNameVoted = settings.getString("name"+i, "");
+			if(bName.compareTo(checkNameVoted) == 0){
+				checkVoted = 1;
+				btFor.setBackgroundColor(drawable.white);
+				btFor.setTextColor(0x5B5B5B);
+				btAgainst.setBackgroundColor(drawable.white);
+				btAgainst.setTextColor(0x5B5B5B);
+			}
+			
+		}
+		if(checkVoted == 0)
+			setListeners();
+			
 	}
 	
 	@Override
@@ -116,6 +140,13 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		Intent i_return;
 		switch (v.getId()) {
 		case R.id.button_For:
+			// To avoid duplicate voting
+			cntVoted++;
+			settings = getSharedPreferences("Preference", 0);
+			settings.edit().putInt("number", cntVoted).commit();
+			settings.edit().putString("name"+cntVoted, bName).commit();
+			//myImgitem = "你推薦了" + cntVoted + "個教授";
+
 			myImgitem = "你推薦了" + bName + "教授";
 			int forValue = bFor;
 			forValue++;
@@ -134,6 +165,13 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			finish();
 			break;
 		case R.id.button_Against:
+			// To avoid duplicate voting
+			cntVoted++;
+			settings = getSharedPreferences("Preference", 0);
+			settings.edit().putInt("number", cntVoted).commit();
+			settings.edit().putString("name"+cntVoted, bName).commit();
+			//myImgitem = "你不推薦" + cntVoted + "個教授";
+			
 			myImgitem = "你不推薦" + bName + "教授";
 			int againstValue = bAgainst;
 			againstValue++;

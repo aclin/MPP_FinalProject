@@ -38,6 +38,17 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name="ListTop5" android:screenOrientation="portrait">
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity android:name="Classified" android:screenOrientation="portrait">
             <intent-filter >
