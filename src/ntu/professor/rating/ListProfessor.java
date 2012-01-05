@@ -23,54 +23,62 @@ import org.json.JSONTokener;
 import ntu.professor.rating.R;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
-public class ListProfessor extends Activity implements View.OnClickListener, ServerCall {
+public class ListProfessor extends Activity implements View.OnClickListener,
+		ServerCall {
 	private static final String TAG = "ListProfessor";
 	private static final int INDIVIDUAL_REQUEST = 0;
-	
+
 	private static final String[] deptsInAbbr = new String[] { "cl", "forex",
-		"history", "philo", "anthro", "libs", "japan", "theatre", "ce",
-		"me", "che", "esoe", "mse", "lifescience", "bst", "ee", "cs",
-		"dod", "ph", "med", "rx", "nurse", "clsmb", "ot", "pt", "politics",
-		"econ", "sociology", "sw", "math", "phys", "ch", "gl", "psy",
-		"geog", "as", "agron", "ae", "ac", "ppm", "fo", "ansc", "agec",
-		"hort", "bicd", "bime", "entomol", "dvm", "ba", "acc", "fin", "ib",
-		"im", "law" };
-	
+			"history", "philo", "anthro", "libs", "japan", "theatre", "ce",
+			"me", "che", "esoe", "mse", "lifescience", "bst", "ee", "cs",
+			"dod", "ph", "med", "rx", "nurse", "clsmb", "ot", "pt", "politics",
+			"econ", "sociology", "sw", "math", "phys", "ch", "gl", "psy",
+			"geog", "as", "agron", "ae", "ac", "ppm", "fo", "ansc", "agec",
+			"hort", "bicd", "bime", "entomol", "dvm", "ba", "acc", "fin", "ib",
+			"im", "law" };
+
 	private final String listURL = "http://ee.hac.tw:2323/insertdb.php";
 	private String responseString;
 	private int queryLength;
-	
+
 	private int chosenPosition;
-	
+
 	ListView list;
 	TextView tvLoading;
 	ArrayList<HashMap<String, Object>> listItem;
-	SimpleAdapter listItemAdapter;
+	//SimpleAdapter listItemAdapter;
+	myListAdapter mListAdapter;
 	String depts;
-	
+
 	private String[] arrImage;
 	private String[] arrName;
 	private String[] arrDepart;
 	private int[] arrFor;
 	private int[] arrAgainst;
+	private float[] arrRate;
 
 	/*
 	 * public Bitmap getBitmap(int i) { Bitmap mBitmap = null; try { URL url =
@@ -98,111 +106,127 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 		mBackBtn.setOnClickListener(this);
 		ImageView ivsearch = (ImageView) findViewById(R.id.imageView_Search);
 		ivsearch.setOnClickListener(this);
-		
+
 		list = (ListView) findViewById(R.id.listView_professor);
 		tvLoading = (TextView) findViewById(R.id.tvLoading);
-		
+
 		Bundle bData = this.getIntent().getExtras();
 		depts = bData.getString("dept");
 		Log.i(TAG, "dept thingy: " + depts);
-		
+
 		listItem = new ArrayList<HashMap<String, Object>>();
-		listItemAdapter = new SimpleAdapter(this,
-				listItem, R.layout.listview_professor, new String[] {
-						"ItemImage", "ItemName", "ItemDepart", "ItemFor",
-						"ItemAgainst" }, new int[] {
-						R.id.imageView_ItemImage, R.id.textView_ItemName,
-						R.id.textView_ItemDepart, R.id.textView_ItemFor,
-						R.id.textView_ItemAgainst });
-		
-		list.setAdapter(listItemAdapter);
-		
+
 		for (int i = 0; i < deptsInAbbr.length; i++) {
 			if (deptsInAbbr[i].equals(depts))
-					new AsyncListTask().execute(ServerCall.POST_READ);
+				new AsyncListTask().execute(ServerCall.POST_READ);
 		}
-		
-		/*if (depts.compareTo("cs") == 0) {
-			new AsyncListTask().execute(ServerCall.POST_READ);
-		}*/
+
+		mListAdapter= new myListAdapter(listItem, this);
+		list.setAdapter(mListAdapter);
 	}
-	
-//	private void populateList() {
-//		
-//		for (int i = 0; i < queryLength; i++) {
-//			HashMap<String, Object> map = new HashMap<String, Object>();
-//			map.put("ItemImage", getBitmap(i));
-//			map.put("ItemName", arrName[i]);
-//			map.put("ItemDepart", arrDepart[i]);
-//			map.put("ItemFor", arrFor[i]);
-//			map.put("ItemAgainst", arrAgainst[i]);
-//			listItem.add(map);
-//		}
-//		
-//		listItemAdapter.setViewBinder(new ViewBinder() {    
-//            
-//            public boolean setViewValue(View view, Object data,    
-//                    String textRepresentation) {    
-//                if (view instanceof ImageView  && data instanceof Bitmap) {    
-//                    ImageView iv = (ImageView) view;
-//                    iv.setImageBitmap((Bitmap) data);    
-//                    return true;    
-//                } else {
-//                	return false;
-//                }
-//            }    
-//        });
-//		listItemAdapter.notifyDataSetChanged();
-//
-//		list.setOnItemClickListener(new OnItemClickListener() {
-//			//String bImage = "";
-//			String bName = "";
-//			String bDepart = "";
-//			String bFor = "";
-//			String bAgainst = "";
-//			Bitmap bImage;
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1,
-//					int position, final long id) {
-//				// TODO Auto-generated method stub
-//				final int peopleToBeShown = position;
-//				
-//				HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) list
-//						.getItemAtPosition(peopleToBeShown);
-//				
-//				bName = itemAtPosition.get("ItemName").toString();
-//				
-//				setTitle("選取了"+ bName);
-//				
-//				bDepart = itemAtPosition.get("ItemDepart").toString();
-//				bFor = itemAtPosition.get("ItemFor").toString();
-//				bAgainst = itemAtPosition.get("ItemAgainst").toString();
-//				bImage = (Bitmap) itemAtPosition.get("ItemImage");
-//				
-//				Intent newAct = new Intent();
-//				newAct.setClass(ListProfessor.this, Induvidual.class);
-//				
-//				Bundle bData = new Bundle();
-//				
-//				bData.putString("bName", bName);
-//				bData.putString("bDepart", bDepart);
-//				bData.putString("bFor", bFor);
-//				bData.putString("bAgainst", bAgainst);
-//				bData.putString("dept", "cs");
-//				newAct.putExtras(bData);
-//				newAct.putExtra("bImage", bImage);
-//				startActivity(newAct); // Need to change this to startActivityForResult()
-//			}
-//		});
-//	}
-	
+
+	private class myListAdapter extends BaseAdapter {
+		private ArrayList<HashMap<String, Object>> myListItem;
+		private LayoutInflater mInflater;
+
+		public myListAdapter(ArrayList<HashMap<String, Object>> mylistitem,
+				Context context) {
+			myListItem = mylistitem;
+			mInflater = LayoutInflater.from(context);
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return myListItem.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return myListItem.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			// A ViewHolder keeps references to children views to avoid
+			// unneccessary calls
+			// to findViewById() on each row.
+			ViewHolder holder;
+
+			// When convertView is not null, we can reuse it directly, there is
+			// no need
+			// to reinflate it. We only inflate a new View when the convertView
+			// supplied
+			// by ListView is null
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.listview_professor,
+						null);
+				// Creates a ViewHolder and store references to the two children
+				// views
+				// we want to bind data to.
+				holder = new ViewHolder();
+				holder.iv = (ImageView) convertView
+						.findViewById(R.id.imageView_ItemImage);
+				holder.tvName = (TextView) convertView
+						.findViewById(R.id.textView_ItemName);
+				holder.tvDept = (TextView) convertView
+						.findViewById(R.id.textView_ItemDepart);
+				holder.tvFor = (TextView) convertView
+						.findViewById(R.id.textView_ItemFor);
+				holder.tvAgainst = (TextView) convertView
+						.findViewById(R.id.textView_ItemAgainst);
+				holder.rtBar = (RatingBar) convertView
+						.findViewById(R.id.ratingBar1);
+				convertView.setTag(holder);
+
+			} else {
+				// Get the ViewHolder back to get fast access to the TextView
+				// and the ImageView.
+				holder = (ViewHolder) convertView.getTag();
+			}
+			// Bind the data with the holder.
+			
+			holder.iv.setImageBitmap((Bitmap) myListItem.get(position).get("ItemImage"));
+			holder.tvName.setText((String) myListItem.get(position).get("ItemName"));
+			holder.tvDept.setText((String) myListItem.get(position).get("ItemDepart"));
+			holder.tvFor.setText((String) myListItem.get(position).get("ItemFor").toString());
+			holder.tvAgainst.setText((String) myListItem.get(position).get("ItemAgainst").toString());
+			
+			holder.rtBar.setRating((Float) myListItem.get(position).get("ItemRating"));
+
+			return convertView;
+		}
+
+		class ViewHolder {
+			/*
+			 * R.id.imageView_ItemImage, R.id.textView_ItemName,
+			 * R.id.textView_ItemDepart, R.id.textView_ItemFor,
+			 * R.id.textView_ItemAgainst
+			 */
+			ImageView iv;
+			TextView tvName;
+			TextView tvDept;
+			TextView tvFor;
+			TextView tvAgainst;
+			RatingBar rtBar;
+		}
+
+	}
+
 	public void postData(int action, String url) throws JSONException {
-    	// Create a new HttpClient and Post Header
+		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost(url);
 		JSONObject j = new JSONObject();
-		
+
 		try {
 			switch (action) {
 			case POST_READ:
@@ -211,23 +235,23 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 				Log.i(TAG, "DEPTS: " + depts);
 				break;
 			}
-			
+
 			JSONArray array = new JSONArray();
 			array.put(j);
-			
+
 			// Post the data:
 			httppost.setHeader("json", j.toString());
 			httppost.getParams().setParameter("jsonpost", array);
 
 			// Execute HTTP Post Request
 			HttpResponse response = httpclient.execute(httppost);
-			
+
 			// for JSON:
-			if(response != null)
-			{
+			if (response != null) {
 				InputStream is = response.getEntity().getContent();
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF8"));
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF8"));
 				StringBuilder sb = new StringBuilder();
 
 				String line = null;
@@ -248,7 +272,6 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 				}
 				responseString = sb.toString();
 				Log.i(TAG, "Response: " + responseString);
-				
 			}
 			JSONTokener tokener = new JSONTokener(responseString);
 			Object o;
@@ -258,125 +281,106 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 					JSONArray result = (JSONArray) o;
 					parseJSON(result);
 				} else {
-					//tv.setText("Cannot parse response from server; not a JSON Object");
+					// tv.setText("Cannot parse response from server; not a JSON Object");
 				}
 			}
-			//tv.setText(reply);
-			
+			// tv.setText(reply);
+
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			Log.e(TAG, "Client Protocol Exception:");
 			e.printStackTrace();
 		} catch (IOException e) {
-    		// TODO Auto-generated catch block
 			Log.e(TAG, "IO Exception:");
 			e.printStackTrace();
 		}
-    }
-    
-    public void parseJSON(JSONArray ja) {
-    	queryLength = ja.length();
-    	arrImage = new String[queryLength];
-    	arrName = new String[queryLength];
-    	arrDepart = new String[queryLength];
-    	arrFor = new int[queryLength];
-    	arrAgainst = new int[queryLength];
-    	try {
-    		for (int i=0; i < ja.length(); i++) {
-    			arrImage[i] = ja.getJSONObject(i).getString("Picture");
-		    	arrName[i] = ja.getJSONObject(i).getString("Name");
-		    	arrDepart[i] = ja.getJSONObject(i).getString("Dept");
-		    	arrFor[i] = ja.getJSONObject(i).getInt("Good");
-		    	arrAgainst[i] = ja.getJSONObject(i).getInt("Bad");
-    		}
-    	} catch (JSONException je) {
-    		Log.e(TAG, "Parse JSON Error:");
-    		je.printStackTrace();
-    	}
-    }
-    
-    public Bitmap getBitmap(int i){
-        Bitmap mBitmap = null;    
-        try {
-            // Get URL of image, make a connection to pull in the image stream
-        	URL url = new URL(arrImage[i]);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();    
-            InputStream is = conn.getInputStream();
-            
-            // Set options to just decode the size of original image
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(is, null, opts);
-            
-            // Set maximum size
-            final int REQUIRED_SZ = 70;
-            
-            // Find scale value. Should be power of 2
-            int origWidth = opts.outWidth;
-            int origHeight = opts.outHeight;
-            int origDim = Math.max(origWidth, origHeight);
-            opts = new BitmapFactory.Options();
-            opts.inSampleSize = 1;
-            while (origDim > REQUIRED_SZ) {
-            	origDim /= 2;
-            	opts.inSampleSize *= 2;
-            }
-            
-            // Get stream again
-            conn = (HttpURLConnection) url.openConnection();    
-            is = conn.getInputStream();
-            
-            // Decode with new scaled option
-            mBitmap = BitmapFactory.decodeStream(is, null, opts);
-            is.close();
-            is = null;
-            System.gc();
-        } catch (MalformedURLException e) {    
-            e.printStackTrace();
-        } catch (IOException e) {    	
-            e.printStackTrace();
-        }
-        
-        return mBitmap;	
 	}
-    
-//    private class NetworkTask extends AsyncTask<Integer, Void, Void> {
-//    	
-//    	ProgressDialog pd;
-//    	
-//    	@Override
-//    	protected void onPreExecute() {
-//    		pd = ProgressDialog.show(ListProfessor.this, "", "Loading...Please wait...");
-//    	}
-//    	
-//    	@Override
-//    	protected Void doInBackground(Integer... params) {
-//    		try {
-//    			postData(params[0].intValue(), listURL);
-//    		} catch (JSONException e) {
-//    			Log.e(TAG, "Network Call Error:");
-//    			e.printStackTrace();
-//    		}
-//    		return null;
-//    	}
-//    	
-//    	@Override
-//    	protected void onPostExecute(Void unused) {
-//    		pd.dismiss();
-//    		populateList();
-//    	}
-//    }
-    
-    private class AsyncListTask extends AsyncTask<Integer, HashMap<String, Object>, Void> {
+
+	public void parseJSON(JSONArray ja) {
+		queryLength = ja.length();
+		arrImage = new String[queryLength];
+		arrName = new String[queryLength];
+		arrDepart = new String[queryLength];
+		arrFor = new int[queryLength];
+		arrAgainst = new int[queryLength];
+		arrRate = new float[queryLength];
+		try {
+			for (int i = 0; i < ja.length(); i++) {
+				arrImage[i] = ja.getJSONObject(i).getString("Picture");
+				arrName[i] = ja.getJSONObject(i).getString("Name");
+				arrDepart[i] = ja.getJSONObject(i).getString("Dept");
+				arrFor[i] = ja.getJSONObject(i).getInt("Good");
+				arrAgainst[i] = ja.getJSONObject(i).getInt("Bad");
+				arrRate[i] = ja.getJSONObject(i).getInt("Rate");
+			}
+		} catch (JSONException je) {
+			Log.e(TAG, "Parse JSON Error:");
+			je.printStackTrace();
+		}
+	}
+
+	public Bitmap getBitmap(int i) {
+		Bitmap mBitmap = null;
+		try {
+			// Get URL of image, make a connection to pull in the image stream
+			URL url = new URL(arrImage[i]);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			InputStream is = conn.getInputStream();
+
+			// Set options to just decode the size of original image
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(is, null, opts);
+
+			// Set maximum size
+			final int REQUIRED_SZ = 70;
+
+			// Find scale value. Should be power of 2
+			int origWidth = opts.outWidth;
+			int origHeight = opts.outHeight;
+			int origDim = Math.max(origWidth, origHeight);
+			opts = new BitmapFactory.Options();
+			opts.inSampleSize = 1;
+			while (origDim > REQUIRED_SZ) {
+				origDim /= 2;
+				opts.inSampleSize *= 2;
+			}
+
+			// Get stream again
+			conn = (HttpURLConnection) url.openConnection();
+			is = conn.getInputStream();
+
+			// Decode with new scaled option
+			mBitmap = BitmapFactory.decodeStream(is, null, opts);
+			is.close();
+			is = null;
+			System.gc();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return mBitmap;
+	}
+
+	public float getRating(int forNum, int againstNum){
+		float rtNum = 0; 
+		if ((forNum+againstNum)>0)
+			rtNum = 5*forNum/(forNum+againstNum);			
+		return rtNum;
+	}
+	
+	private class AsyncListTask extends
+			AsyncTask<Integer, HashMap<String, Object>, Void> {
 
 		@Override
 		protected Void doInBackground(Integer... params) {
 			try {
-    			postData(params[0].intValue(), listURL);
-    		} catch (JSONException e) {
-    			Log.e(TAG, "Network Call Error:");
-    			e.printStackTrace();
-    		}
+				postData(params[0].intValue(), listURL);
+			} catch (JSONException e) {
+				Log.e(TAG, "Network Call Error:");
+				e.printStackTrace();
+			}
 			for (int i = 0; i < queryLength; i++) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("ItemImage", getBitmap(i));
@@ -384,6 +388,7 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 				map.put("ItemDepart", arrDepart[i]);
 				map.put("ItemFor", arrFor[i]);
 				map.put("ItemAgainst", arrAgainst[i]);
+				map.put("ItemRating", getRating(arrFor[i],arrAgainst[i]));
 				publishProgress(map);
 			}
 			return null;
@@ -392,54 +397,45 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 		@Override
 		protected void onProgressUpdate(HashMap<String, Object>... map) {
 			listItem.add(map[0]);
-			listItemAdapter.setViewBinder(new ViewBinder() {    
-	            
-	            public boolean setViewValue(View view, Object data,    
-	                    String textRepresentation) {    
-	                if (view instanceof ImageView  && data instanceof Bitmap) {    
-	                    ImageView iv = (ImageView) view;
-	                    iv.setImageBitmap((Bitmap) data);    
-	                    return true;    
-	                } else {
-	                	return false;
-	                }
-	            }    
-	        });
-			listItemAdapter.notifyDataSetChanged();
+			mListAdapter.notifyDataSetChanged();
 
 			list.setOnItemClickListener(new OnItemClickListener() {
-				//String bImage = "";
+				// String bImage = "";
 				String bName = "";
 				String bDepart = "";
 				int bFor = 0;
 				int bAgainst = 0;
 				Bitmap bImage;
-				
+				float bRate = 0;
+
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int position, final long id) {
-					// TODO Auto-generated method stub
 					HashMap<String, Object> itemAtPosition = (HashMap<String, Object>) listItem
 							.get(position);
-					
+
 					chosenPosition = position;
-					
+
 					bName = itemAtPosition.get("ItemName").toString();
 					setTitle("選取了" + bName);
-					//bDepart = itemAtPosition.get("ItemDepart").toString();
+					// bDepart = itemAtPosition.get("ItemDepart").toString();
 					bFor = (Integer) itemAtPosition.get("ItemFor");
 					bAgainst = (Integer) itemAtPosition.get("ItemAgainst");
 					bImage = (Bitmap) itemAtPosition.get("ItemImage");
+					bRate = (Float) itemAtPosition.get("ItemRating");
+
+					// Toast.makeText(ListProfessor.this, "rate= "+bRate,
+					// Toast.LENGTH_LONG).show();
+
 					Intent newAct = new Intent();
 					newAct.setClass(ListProfessor.this, Induvidual.class);
 					Bundle bData = new Bundle();
-					
+
 					bData.putString("bName", bName);
-					//bData.putString("bDepart", bDepart);
+					// bData.putString("bDepart", bDepart);
 					bData.putString("bDepart", depts);
 					bData.putInt("bFor", bFor);
 					bData.putInt("bAgainst", bAgainst);
-					//bData.putString("dept", "cs");
 					Log.i(TAG, "bDepart: " + bDepart);
 					newAct.putExtras(bData);
 					newAct.putExtra("bImage", bImage);
@@ -447,40 +443,35 @@ public class ListProfessor extends Activity implements View.OnClickListener, Ser
 				}
 			});
 		}
-		
 		@Override
 		protected void onPostExecute(Void unused) {
 			tvLoading.setVisibility(View.GONE);
 		}
-    }
-    
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == INDIVIDUAL_REQUEST) {
-        	Bundle b = data.getExtras();
-        	Log.i(TAG, "Name: " + b.getString("bName"));
-        	Log.i(TAG, "For: " + b.getInt("bFor"));
-        	Log.i(TAG, "Against: " + b.getInt("bAgainst"));
-        	HashMap<String, Object> hm = listItem.get(chosenPosition);
-        	hm.put("ItemFor", b.getInt("bFor"));
-        	hm.put("ItemAgainst", b.getInt("bAgainst"));
-        	listItemAdapter.notifyDataSetChanged();
-        }
-    }
-    
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK && requestCode == INDIVIDUAL_REQUEST) {
+			Bundle b = data.getExtras();
+			Log.i(TAG, "Name: " + b.getString("bName"));
+			Log.i(TAG, "For: " + b.getInt("bFor"));
+			Log.i(TAG, "Against: " + b.getInt("bAgainst"));
+			HashMap<String, Object> hm = listItem.get(chosenPosition);
+			hm.put("ItemFor", b.getInt("bFor"));
+			hm.put("ItemAgainst", b.getInt("bAgainst"));
+			hm.put("ItemRating", getRating(b.getInt("bFor"),b.getInt("bAgainst")));
+			mListAdapter.notifyDataSetChanged();
+		}
+	}
+
 	@Override
 	protected void onRestart() {
-		// TODO Auto-generated method stub
 		super.onRestart();
-//		Toast.makeText(ListProfessor.this, "Restart!!!", Toast.LENGTH_SHORT)
-//				.show();
-
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.imageView_Search:
 			onSearchRequested();

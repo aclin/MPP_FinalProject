@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Departments extends Activity implements View.OnClickListener{
 	/** Called when the activity is first created. */
@@ -57,7 +56,6 @@ public class Departments extends Activity implements View.OnClickListener{
 				mArrayAdapter = new ArrayAdapter<String>(this,
 						android.R.layout.simple_list_item_1);
 				mListView.setAdapter(mArrayAdapter);
-				String arrNamePt = totalCollegeName[i] + "DeptsChinese";
 
 				for (int j = 0; j < collegeLength; j++) {
 					mArrayAdapter.add(deptsInChinese[j+deptPtr]);

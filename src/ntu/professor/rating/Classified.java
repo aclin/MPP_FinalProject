@@ -2,7 +2,6 @@ package ntu.professor.rating;
 
 import ntu.professor.rating.R;
 import android.app.Activity;
-import android.app.PendingIntent.OnFinished;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,11 +19,11 @@ public class Classified extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.classified);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				R.layout.my_title);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, 
+				R.layout.my_title_home);
 		TextView mTitleTextView = (TextView) findViewById(R.id.title_txt);
 		mTitleTextView.setText("Professor Rating");
-		Button mBackBtn = (Button) findViewById(R.id.back_btn);
+		Button mBackBtn = (Button) findViewById(R.id.top5_btn);
 		mBackBtn.setOnClickListener(this);
 		ImageView ivsearch = (ImageView) findViewById(R.id.imageView_Search);
 		ivsearch.setOnClickListener(this);
@@ -101,14 +100,20 @@ public class Classified extends Activity implements View.OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if (v.getId() != R.id.imageView_Search)
-			v.setBackgroundColor(0xFF94E938);
 
+		if (v.getId() != R.id.imageView_Search && v.getId() != R.id.top5_btn)
+			v.setBackgroundColor(0xFF94E938);
+		
 		Intent newAct;
 		Bundle bData = new Bundle();
-		newAct = new Intent();
-		newAct.setClass(Classified.this, Departments.class);
+		newAct = new Intent();	
 		Boolean activity = true;
+		
+		if (v.getId()==R.id.top5_btn)
+			newAct.setClass(Classified.this, ListTop5.class);	
+		else 
+			newAct.setClass(Classified.this, Departments.class);
+		
 
 		switch (v.getId()) {
 		case R.id.ImageView_depart1:
@@ -158,117 +163,17 @@ public class Classified extends Activity implements View.OnClickListener {
 		case R.id.ImageView_depart12:
 			bData.putString("depts", "fashueh");
 			break;
+
 		case R.id.imageView_Search:
 			onSearchRequested();
 			activity = false;
 			break;
-		case R.id.back_btn:
-			finish();
-			activity = false;
-			break;
+
 		}
 		if (activity != false) {
 			newAct.putExtras(bData);
 			startActivity(newAct);
 		}
-		// // TODO Auto-generated method stub
-		// Intent newAct;
-		// Bundle bData = new Bundle();
-		// switch (arg0.getId()) {
-		// case R.id.ImageView_depart1:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept1");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart2:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		//
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart3:
-		// newAct = new Intent();
-		//
-		// bData.putString("depts", "dianchi");
-		// newAct.putExtras(bData);
-		//
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart4:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		//
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart5:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart6:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart7:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart8:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart9:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart10:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart11:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.ImageView_depart12:
-		// newAct = new Intent();
-		// newAct.setClass(Classified1.this, Departments1.class);
-		// bData.putString("depts", "dept");
-		// newAct.putExtras(bData);
-		// startActivity(newAct);
-		// break;
-		// case R.id.imageView_Search:
-		// onSearchRequested();
-		// break;
-		// case R.id.back_btn:
-		// finish();
-		// break;
-		// }
+
 	}
 }

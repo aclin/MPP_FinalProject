@@ -1,0 +1,8 @@
+2011/12/29 - change app icon&name
+2011/12/29 - delete redundant pic
+2011/12/29 - modified list_top5.xml error (match_parent to fill_parent)
+2011/12/29 - modified individual.java chinese error
+
+2012/01/03 - make entry image full, make the rating bar real, clean empty toast
+
+2012/01/04 - avoid duplicate voting by using sharedpreference

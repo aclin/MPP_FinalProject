@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/textView_ItemName"
-                android:layout_width="fill_parent"
+                android:layout_width="128dp"
                 android:layout_height="wrap_content"
                 android:text="葉教授"
                 android:textSize="20dip" />

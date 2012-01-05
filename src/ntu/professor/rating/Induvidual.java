@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -16,23 +17,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ntu.professor.rating.R;
+import ntu.professor.rating.R.drawable;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class Induvidual extends Activity implements View.OnClickListener, ServerCall {
 	private final static String TAG = "MPP_Individual";
@@ -45,13 +47,17 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 	private Bitmap bImage;
 	private String bName;
 	private String bDepart;
+	private SharedPreferences settings;
+	private int cntVoted; 
 	private int bFor;
 	private int bAgainst;
+	private float bRate;
 	
 	private Button btFor;
 	private Button btAgainst;
 	private ImageView ivImage;
 	private TextView tvName;
+	private RatingBar rtBar;
 
 
 	private void findView() {
@@ -59,7 +65,7 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		tvName = (TextView) findViewById(R.id.textView_ItemName);
 		btFor = (Button) findViewById(R.id.button_For);
 		btAgainst = (Button) findViewById(R.id.button_Against);
-		
+		rtBar = (RatingBar) findViewById(R.id.ratingBar1);
 	}
 	
 	private void setListeners() {
@@ -85,7 +91,6 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		ivsearch.setOnClickListener(this);
 		
 		findView();
-		setListeners();
 		
 		Bundle bData = this.getIntent().getExtras();
 		bName = bData.getString("bName");
@@ -99,10 +104,36 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		bDepart = bData.getString("bDepart");
 		bFor = bData.getInt("bFor");
 		bAgainst = bData.getInt("bAgainst");
+		if ((bFor+bAgainst)>0)
+			bRate=5*bFor/(bFor+bAgainst);
+		else 
+			bRate=0;
 		bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
 		
 		tvName.setText(bName + " 教授");
 		ivImage.setImageBitmap(bImage);
+		rtBar.setRating(bRate);
+		
+		// To avoid duplicate voting
+		settings = getSharedPreferences("Preference", 0);
+		cntVoted = settings.getInt("number", 0);
+		int checkVoted = 0;
+		String checkNameVoted="";
+		
+		for(int i=1; i<=cntVoted; ++i){
+			checkNameVoted = settings.getString("name"+i, "");
+			if(bName.compareTo(checkNameVoted) == 0){
+				checkVoted = 1;
+				btFor.setBackgroundColor(drawable.white);
+				btFor.setTextColor(0x5B5B5B);
+				btAgainst.setBackgroundColor(drawable.white);
+				btAgainst.setTextColor(0x5B5B5B);
+			}
+			
+		}
+		if(checkVoted == 0)
+			setListeners();
+		
 	}
 	
 	@Override
@@ -113,15 +144,19 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		Intent i_return;
 		switch (v.getId()) {
 		case R.id.button_For:
+			// To avoid duplicate voting
+			cntVoted++;
+			settings = getSharedPreferences("Preference", 0);
+			settings.edit().putInt("number", cntVoted).commit();
+			settings.edit().putString("name"+cntVoted, bName).commit();
+			//myImgitem = "你推薦了" + cntVoted + "個教授";
+
 			myImgitem = "你推薦了" + bName + "教授";
 			int forValue = bFor;
 			forValue++;
 			bFor = forValue;
-			try {
-				postData(POST_GOOD, rateURL);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			new AsyncRateTask().execute(POST_GOOD);
+			
 			i_return = new Intent();
 			bData.putInt("bFor", bFor);
 			bData.putInt("bAgainst", bAgainst);
@@ -131,15 +166,19 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 			finish();
 			break;
 		case R.id.button_Against:
+			// To avoid duplicate voting
+			cntVoted++;
+			settings = getSharedPreferences("Preference", 0);
+			settings.edit().putInt("number", cntVoted).commit();
+			settings.edit().putString("name"+cntVoted, bName).commit();
+			//myImgitem = "你不推薦" + cntVoted + "個教授";
+			
 			myImgitem = "你不推薦" + bName + "教授";
 			int againstValue = bAgainst;
 			againstValue++;
 			bAgainst = againstValue;
-			try {
-				postData(POST_BAD, rateURL);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			new AsyncRateTask().execute(POST_BAD);
+			
 			i_return = new Intent();
 			bData.putInt("bFor", bFor);
 			bData.putInt("bAgainst", bAgainst);
@@ -157,7 +196,8 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		default:
 			break;
 		}
-		Toast.makeText(Induvidual.this, myImgitem, Toast.LENGTH_LONG).show();
+		if (myImgitem!=null)
+			Toast.makeText(Induvidual.this, myImgitem, Toast.LENGTH_LONG).show();
 	}
 	
 	public void postData(int action, String url) throws JSONException {
@@ -261,4 +301,29 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
     		je.printStackTrace();
     	}*/
     }
+    
+    private class AsyncRateTask extends AsyncTask<Integer, Void, Void> {
+	
+		@Override
+		protected Void doInBackground(Integer... params) {
+			try {
+				postData(params[0].intValue(), rateURL);
+			} catch (JSONException e) {
+				Log.e(TAG, "Network Call Error:");
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... unused) {
+			
+		}
+		
+		@Override
+		protected void onPostExecute(Void unused) {
+			
+		}
+	}
 }
