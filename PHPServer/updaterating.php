@@ -33,6 +33,8 @@
 			mysql_query($q);
 			$q = "UPDATE ".$tables[$i]." SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
 			mysql_query($q);
+			$q = "UPDATE ".$tables[$i]." SET Votes = (Good + Bad) WHERE Name='".$name."'";
+			mysql_query($q);
 			break;
 		case "Bad":
 			mysql_select_db("ajatest", $con);
@@ -46,6 +48,8 @@
 			$q = "UPDATE ".$tables[$i]." SET Bad = Bad + 1 WHERE Name='".$name."'";
 			mysql_query($q);
 			$q = "UPDATE ".$tables[$i]." SET Rate = Good / (Good + Bad) WHERE Name='".$name."'";
+			mysql_query($q);
+			$q = "UPDATE ".$tables[$i]." SET Votes = (Good + Bad) WHERE Name='".$name."'";
 			mysql_query($q);
 			break;
 	}

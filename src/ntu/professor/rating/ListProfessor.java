@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,6 +24,7 @@ import org.json.JSONTokener;
 import ntu.professor.rating.R;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -65,6 +67,7 @@ public class ListProfessor extends Activity implements View.OnClickListener,
 	private int queryLength;
 
 	private int chosenPosition;
+	private AsyncListTask listTask = new AsyncListTask();
 
 	ListView list;
 	TextView tvLoading;
@@ -72,6 +75,7 @@ public class ListProfessor extends Activity implements View.OnClickListener,
 	//SimpleAdapter listItemAdapter;
 	myListAdapter mListAdapter;
 	String depts;
+	private String query;
 
 	private String[] arrImage;
 	private String[] arrName;
@@ -109,20 +113,49 @@ public class ListProfessor extends Activity implements View.OnClickListener,
 
 		list = (ListView) findViewById(R.id.listView_professor);
 		tvLoading = (TextView) findViewById(R.id.tvLoading);
-
-		Bundle bData = this.getIntent().getExtras();
-		depts = bData.getString("dept");
-		Log.i(TAG, "dept thingy: " + depts);
-
-		listItem = new ArrayList<HashMap<String, Object>>();
-
-		for (int i = 0; i < deptsInAbbr.length; i++) {
-			if (deptsInAbbr[i].equals(depts))
-				new AsyncListTask().execute(ServerCall.POST_READ);
+		
+		Intent intent = this.getIntent();
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			if (intent.getStringExtra(SearchManager.QUERY).equals(null)) {
+				query = intent.getStringExtra("query");
+			} else {
+				query = intent.getStringExtra(SearchManager.QUERY);
+			}
+			try {
+				query = new String(query.getBytes(), "ISO8859_1");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			Log.i(TAG, "Query: " + query);
+			listTask.execute(ServerCall.POST_SEARCH);
+			listItem = new ArrayList<HashMap<String, Object>>();
+		} else {
+			Bundle bData = intent.getExtras();
+			depts = bData.getString("dept");
+			Log.i(TAG, "dept thingy: " + depts);
+	
+			listItem = new ArrayList<HashMap<String, Object>>();
+	
+			if (depts.equals("top5")) {
+				listTask.execute(ServerCall.POST_TOP5);
+			} else {
+				for (int i = 0; i < deptsInAbbr.length; i++) {
+					if (deptsInAbbr[i].equals(depts))
+						listTask.execute(ServerCall.POST_READ);
+				}
+			}
 		}
 
 		mListAdapter= new myListAdapter(listItem, this);
 		list.setAdapter(mListAdapter);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(listTask.getStatus() == AsyncTask.Status.RUNNING) {
+			listTask.cancel(true);
+		}
 	}
 
 	private class myListAdapter extends BaseAdapter {
@@ -223,6 +256,7 @@ public class ListProfessor extends Activity implements View.OnClickListener,
 
 	public void postData(int action, String url) throws JSONException {
 		// Create a new HttpClient and Post Header
+		Log.i(TAG, "URL: " + url);
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost(url);
 		JSONObject j = new JSONObject();
@@ -233,6 +267,14 @@ public class ListProfessor extends Activity implements View.OnClickListener,
 				j.put("Command", "Read");
 				j.put("Dept", depts);
 				Log.i(TAG, "DEPTS: " + depts);
+				break;
+			case POST_TOP5:
+				j.put("Command", "Top5");
+				break;
+			case POST_SEARCH:
+				Log.i(TAG, "Post for search");
+				j.put("Command", "Search");
+				j.put("Query", query);
 				break;
 			}
 

@@ -36,7 +36,13 @@ public class Classified extends Activity implements View.OnClickListener {
 			}
 			if (Intent.ACTION_SEARCH.equals(action)) {
 				String query = intent.getStringExtra(SearchManager.QUERY);
-				System.out.println(query);
+				//System.out.println(query);
+				Intent newAct = new Intent();
+				newAct.setAction(Intent.ACTION_SEARCH);
+				newAct.setClass(Classified.this, ListProfessor.class);
+				newAct.putExtra("query", query);
+				startActivity(newAct);
+				finish();
 			}
 		}
 
@@ -109,9 +115,10 @@ public class Classified extends Activity implements View.OnClickListener {
 		newAct = new Intent();	
 		Boolean activity = true;
 		
-		if (v.getId()==R.id.top5_btn)
-			newAct.setClass(Classified.this, ListTop5.class);	
-		else 
+		if (v.getId()==R.id.top5_btn) {
+			newAct.setClass(Classified.this, ListProfessor.class);
+			bData.putString("dept", "top5");
+		} else 
 			newAct.setClass(Classified.this, Departments.class);
 		
 

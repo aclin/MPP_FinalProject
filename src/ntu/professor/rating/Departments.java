@@ -2,6 +2,7 @@ package ntu.professor.rating;
 
 import ntu.professor.rating.R;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -100,12 +101,29 @@ public class Departments extends Activity implements View.OnClickListener{
 		ImageView ivsearch = (ImageView) findViewById(R.id.imageView_Search);
 		ivsearch.setOnClickListener(this);
 		
-		Bundle bData = this.getIntent().getExtras();
-		String collegeName = bData.getString("depts");
-		//Toast.makeText(Departments.this,collegeName ,Toast.LENGTH_SHORT).show();
-		deptPtr = 0;
-		setDepts(collegeName);
-
+		Intent intent = getIntent();
+		String action = intent.getAction();
+		if (action != null) {
+			if (action.equals(Intent.ACTION_MAIN)) {
+				mBackBtn.setVisibility(View.INVISIBLE);
+			}
+			if (Intent.ACTION_SEARCH.equals(action)) {
+				String query = intent.getStringExtra(SearchManager.QUERY);
+				//System.out.println(query);
+				Intent newAct = new Intent();
+				newAct.setAction(Intent.ACTION_SEARCH);
+				newAct.setClass(Departments.this, ListProfessor.class);
+				newAct.putExtra("query", query);
+				startActivity(newAct);
+				finish();
+			}
+		} else {
+			Bundle bData = intent.getExtras();
+			String collegeName = bData.getString("depts");
+			//Toast.makeText(Departments.this,collegeName ,Toast.LENGTH_SHORT).show();
+			deptPtr = 0;
+			setDepts(collegeName);
+		}
 	}
 
 	@Override

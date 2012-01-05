@@ -9,6 +9,7 @@ public interface ServerCall {
 	public static final int POST_GOOD = 2;
 	public static final int POST_BAD = 3;
 	public static final int POST_ADD = 4;
+	public static final int POST_SEARCH = 5;
 	
 	public void postData(int action, String url) throws JSONException;
 	

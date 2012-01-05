@@ -20,6 +20,7 @@ import ntu.professor.rating.R;
 import ntu.professor.rating.R.drawable;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -92,48 +93,62 @@ public class Induvidual extends Activity implements View.OnClickListener, Server
 		
 		findView();
 		
-		Bundle bData = this.getIntent().getExtras();
-		bName = bData.getString("bName");
-		Log.i(TAG, "bName: " + bName);
-		try {
-			bNameUTF8 = new String(bName.getBytes(), "ISO8859_1");
-			Log.i(TAG, "bNameUTF8: " + bNameUTF8);
-		} catch (UnsupportedEncodingException  e) {
-			e.printStackTrace();
-		}
-		bDepart = bData.getString("bDepart");
-		bFor = bData.getInt("bFor");
-		bAgainst = bData.getInt("bAgainst");
-		if ((bFor+bAgainst)>0)
-			bRate=5*bFor/(bFor+bAgainst);
-		else 
-			bRate=0;
-		bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
-		
-		tvName.setText(bName + " 教授");
-		ivImage.setImageBitmap(bImage);
-		rtBar.setRating(bRate);
-		
-		// To avoid duplicate voting
-		settings = getSharedPreferences("Preference", 0);
-		cntVoted = settings.getInt("number", 0);
-		int checkVoted = 0;
-		String checkNameVoted="";
-		
-		for(int i=1; i<=cntVoted; ++i){
-			checkNameVoted = settings.getString("name"+i, "");
-			if(bName.compareTo(checkNameVoted) == 0){
-				checkVoted = 1;
-				btFor.setBackgroundColor(drawable.white);
-				btFor.setTextColor(0x5B5B5B);
-				btAgainst.setBackgroundColor(drawable.white);
-				btAgainst.setTextColor(0x5B5B5B);
+		Intent intent = this.getIntent();
+		String action = intent.getAction();
+		if (action != null) {
+			if (Intent.ACTION_SEARCH.equals(action)) {
+				String query = intent.getStringExtra(SearchManager.QUERY);
+				//System.out.println(query);
+				Intent newAct = new Intent();
+				newAct.setAction(Intent.ACTION_SEARCH);
+				newAct.setClass(Induvidual.this, ListProfessor.class);
+				newAct.putExtra("query", query);
+				startActivity(newAct);
+				finish();
 			}
+		} else {
+			Bundle bData = intent.getExtras();
+			bName = bData.getString("bName");
+			Log.i(TAG, "bName: " + bName);
+			try {
+				bNameUTF8 = new String(bName.getBytes(), "ISO8859_1");
+				Log.i(TAG, "bNameUTF8: " + bNameUTF8);
+			} catch (UnsupportedEncodingException  e) {
+				e.printStackTrace();
+			}
+			bDepart = bData.getString("bDepart");
+			bFor = bData.getInt("bFor");
+			bAgainst = bData.getInt("bAgainst");
+			if ((bFor+bAgainst)>0)
+				bRate=5*bFor/(bFor+bAgainst);
+			else 
+				bRate=0;
+			bImage = (Bitmap) this.getIntent().getParcelableExtra("bImage");
 			
+			tvName.setText(bName + " 教授");
+			ivImage.setImageBitmap(bImage);
+			rtBar.setRating(bRate);
+			
+			// To avoid duplicate voting
+			settings = getSharedPreferences("Preference", 0);
+			cntVoted = settings.getInt("number", 0);
+			int checkVoted = 0;
+			String checkNameVoted="";
+			
+			for(int i=1; i<=cntVoted; ++i){
+				checkNameVoted = settings.getString("name"+i, "");
+				if(bName.compareTo(checkNameVoted) == 0){
+					checkVoted = 1;
+					btFor.setBackgroundColor(drawable.white);
+					btFor.setTextColor(0x5B5B5B);
+					btAgainst.setBackgroundColor(drawable.white);
+					btAgainst.setTextColor(0x5B5B5B);
+				}
+				
+			}
+			if(checkVoted == 0)
+				setListeners();
 		}
-		if(checkVoted == 0)
-			setListeners();
-		
 	}
 	
 	@Override
